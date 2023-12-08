@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>RESOURCE/default/GameObjectDefaultPix.png</file>
+        <file>RESOURCE/setting/engine.lua</file>
+        <file>RESOURCE/setting/gameobject.lua</file>
+        <file>RESOURCE/setting/item.lua</file>
+        <file>RESOURCE/setting/test.lua</file>
+        <file>RESOURCE/default/MotaPix/wall1.png</file>
+        <file>RESOURCE/default/MotaPix/wall2.png</file>
+        <file>RESOURCE/default/MotaPix/wall3.png</file>
+        <file>RESOURCE/default/MotaPix/Hero1.png</file>
+        <file>RESOURCE/setting/monsterTest1.lua</file>
+        <file>RESOURCE/setting/monsterTest2.lua</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file>RESOURCE/setting/shapes.frag</file>
+        <file>RESOURCE/setting/shapes.vert</file>
+    </qresource>
+</RCC>
