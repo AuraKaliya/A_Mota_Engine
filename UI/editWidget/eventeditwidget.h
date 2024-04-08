@@ -9,7 +9,8 @@
 
 #include <TOOL/eventTool/eventsystem.h>
 #include <TOOL/editTool/editsystem.h>
-
+#include <DATA/enginestyle.h>
+#include <UI/componentWidget/diybutton.h>
 class EventEditWidget : public UIWidget
 {
     Q_OBJECT
@@ -17,7 +18,7 @@ public:
     explicit EventEditWidget(QWidget *parent = nullptr);
 
     ToolWidget *getShowWidget() const;
-
+    void setUIStyle()override;
 private:
     ToolWidget* m_showWidget=nullptr;
 

@@ -22,8 +22,10 @@ QMap<QString,QVector<QString>> SourceManager::m_gameObjectComponentList{};
 QMap<QString,QVector<QPair<QString,QString> > > SourceManager::m_gameObjectBasePropertyList{};
 QMap<QString,QVector<QMetaProperty> > SourceManager::m_gameObjectPropertyList{};
 QMap<QString,QVector<QMetaProperty>> SourceManager::m_gameObjectComponentPropertyList{};
+QMap<QString,QVector<QPixmap>> SourceManager::m_DynamicPixmapDictionary{};
+QMap<unsigned int,PixSource*> SourceManager::m_pixSourceDictionary{};
 SourceManager* SourceManager::m_instance=nullptr;
-
+QString SourceManager::m_outPortPath="./demoSource.json";
 unsigned int SourceManager::m_maxSourceId=1000001;
 unsigned int SourceManager::m_maxGameObjectId=9000001;
 unsigned int SourceManager::m_maxGameObjectItemId=8000001;
@@ -233,12 +235,16 @@ void SourceManager::addGameObjectSourceFromSample(QString objClass)
 {
     // 1.从static中获取当前的id，对objName中的id进行修改
     //需要获取的是子类对象的内存，用基类指针对象GameObject*进行存储。   ---用工厂
+
+    qDebug()<<"SourceManager::addGameObjectSourceFromSample ----";
+    qDebug()<<"objClass: "<<objClass;
     GameObject* newObj=Factory<GameObject>::GetInstance()->CreateObject(objClass);
-    //qDebug()<<newObj->getClassName();
+    qDebug()<<newObj->getClassName();
     *newObj<<(*m_gameObjectSampleDictionary[objClass]);
     // 2.addGameObjectToSource
     registerGameObjectSource(newObj,newObj->getName());
-    //qDebug()<<"register GameObject "<<newObj->getName();
+    qDebug()<<"register GameObject "<<newObj->getName();
+    qDebug()<<"SourceManager::addGameObjectSourceFromSample ---- end";
     emit addSource();
 }
 
@@ -248,7 +254,7 @@ GameObject* SourceManager::addGameObjectFromSource(QString objName)
     GameObject* newObj=Factory<GameObject>::GetInstance()->CreateObject(m_gameObjectSourceDictionary[objName]->getClassName());
 
     *newObj<<(*m_gameObjectSourceDictionary[objName]);
-
+    qDebug()<<"SourceManager::addGameObjectFromSource --check:"<<m_maxGameObjectId;
     addGameObjectById(newObj,m_maxGameObjectId);
     m_maxGameObjectId++;
     return newObj;
@@ -270,6 +276,7 @@ void SourceManager::addGameObjectItem(GameObjectItem *item)
 void SourceManager::addGameObejctItemById(GameObjectItem *item, unsigned int id)
 {
     m_gameObjectItemDictionary[id]=item;
+    item->getLinkObj()->setItemId(id);
 }
 
 GameObjectItem *SourceManager::getGameObjectItemById(unsigned int id)
@@ -343,10 +350,22 @@ QPixmap *SourceManager::getPixmapById(unsigned int id)
     }
     else
     {
-        //返回默认值
-        qDebug()<<"Error:pixID"<<id;
-        qDebug()<<"return default pix";
-        return m_defaultPix;
+        //查不到---从图片资源（pixSource）中查
+        auto it2=m_pixSourceDictionary.find(id);
+        if(it2!=m_pixSourceDictionary.end())
+        {
+            qDebug()<<"tip: 从pixSource中找到了！";
+            qDebug()<<"it2.value()->pix()"<<it2.value()->pix();
+            return it2.value()->pix();
+        }else
+        {
+            //都找不到---返回默认值
+            qDebug()<<"Error:pixID"<<id;
+            qDebug()<<"return default pix";
+
+            return m_defaultPix;
+        }
+
     }
 
 }
@@ -380,6 +399,27 @@ QPixmap *SourceManager::getPixmapByObject(GameObject *obj)
     int id=obj->getPixId();
     //查找对应Image并返回
     return getPixmapById(id);
+}
+
+PixSource *SourceManager::getPixSourceById(unsigned int id)
+{
+    auto it=m_pixSourceDictionary.find(id);
+    if(it!=m_pixSourceDictionary.end())
+    {
+        return it.value();
+    }
+    return nullptr;
+}
+
+QVector<PixSource *> SourceManager::getPixSourceList()
+{
+    QVector<PixSource*> vector;
+    for(auto it=m_pixSourceDictionary.begin();it!=m_pixSourceDictionary.end();++it)
+    {
+        vector.append(it.value());
+    }
+    return vector;
+
 }
 
 GameObject *SourceManager::getObjectById(unsigned int id)
@@ -642,6 +682,25 @@ GameDemo *SourceManager::getNowDemo()
     return m_nowDemo;
 }
 
+void SourceManager::outPortDemo()
+{
+    QFile file(m_outPortPath);
+
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        qDebug()<<"ERROR: CAN NOT OPEN FILE"<<m_outPortPath;
+        return;
+    }
+
+    QJsonDocument jsonDoc;
+    jsonDoc.setObject(m_nowDemo->getDemoSource());
+    file.write(jsonDoc.toJson());
+    file.close();
+
+    qDebug()<<"write end!"<<m_outPortPath;
+    return;
+}
+
 void SourceManager::addPixmap(unsigned int id, QString path, QPixmap *pix)
 {
     //需要动态更新maxSourceId --后续进行重构
@@ -664,6 +723,19 @@ void SourceManager::addPixmap(unsigned int id, QString path, QPixmap *pix)
 
 }
 
+void SourceManager::addPixSource(unsigned int id, PixSource *pixSource)
+{
+    m_maxSourceId=qMax(id,m_maxSourceId);
+    m_maxSourceId++;
+
+    qDebug()<<"Check:addPixSource----";
+    qDebug()<<"id:"<<pixSource->id()<<"  pix: "<<pixSource->pix();
+    qDebug()<<"Check:addPixSource----end";
+    //bool flag=true;
+    m_pixSourceDictionary.insert(id,pixSource);
+
+}
+
 bool SourceManager::readImage(QString path)
 {
     QPixmap* pix=new QPixmap(path);
@@ -671,6 +743,24 @@ bool SourceManager::readImage(QString path)
     if(pix == nullptr) return false;
 
     addPixmap(m_maxSourceId,path,pix);
+
+    return true;
+}
+
+bool SourceManager::readDynamicImage(QString path)
+{
+    return true;
+}
+
+bool SourceManager::readPixSource(QString path)
+{
+    QPixmap* pix=new QPixmap(path);
+
+    if(pix == nullptr) return false;
+
+    PixSource* pixSource=new PixSource(m_maxSourceId,pix,PixSource::DynamicPix);
+
+    addPixSource(m_maxSourceId,pixSource);
 
     return true;
 }
@@ -759,6 +849,9 @@ void SourceManager::readJsonFileToSource(QJsonObject obj)
     qDebug()<<"check-1:"<<obj.keys();
     QJsonObject dataObj=obj.value("Image").toObject();
     qDebug()<<"check0:"<<dataObj.keys();
+
+
+    //此处暂时弃用
     if(obj.contains("Image"))
     {
         //添加Image
@@ -801,6 +894,66 @@ void SourceManager::readJsonFileToSource(QJsonObject obj)
     {
         qDebug()<<"ERROR:No have Image";
     }
+
+
+    //资源导入以该关键字为准
+    if(obj.contains("PixSource"))
+    {
+        QJsonObject pixSourceObj=obj.value("PixSource").toObject();
+
+        QString imageDirPath=pixSourceObj.value("PixPath").toString();
+
+
+        for(auto it:pixSourceObj.value("PixList").toArray())
+        {
+            QJsonObject obj=it.toObject();
+
+            //id
+            int pixIdx=obj.value("PixIdx").toInt();
+            //name
+            QString pixName=obj.value("PixName").toString();
+            //type
+            int pixType=obj.value("PixType").toInt();
+
+            //pixsize
+            int pixWidth=obj.value("PixSize").toArray()[0].toInt();
+            int pixHeight=obj.value("PixSize").toArray()[1].toInt();
+            //不应该在这里做这事
+
+            QString path=imageDirPath+"/"+pixName;
+            PixSource* pixSource=new PixSource(pixIdx,path,(PixSource::Type)pixType);
+
+            if(pixType==(int)PixSource::Type::DynamicPix)
+            {
+                //perSize
+                int perWidth=obj.value("PixPerSize").toArray()[0].toInt();
+                int perHeight=obj.value("PixPerSize").toArray()[1].toInt();
+                pixSource->setPerPixSize(perWidth,perHeight);
+                //
+
+                //interval
+                int perIntervalX=obj.value("PixPerInterval").toArray()[0].toInt();
+                int perIntervalY=obj.value("PixPerInterval").toArray()[1].toInt();
+                pixSource->setPerInterval(perIntervalX,perIntervalY);
+
+                //state
+                QString stateList=obj.value("PixStateList").toString();
+                pixSource->setPixStateList(stateList);
+
+                //stateIdx
+                QString stateIdxList=obj.value("PixStateIdxList").toString();
+                pixSource->setPixIndexList(stateIdxList);
+
+            }
+            addPixSource(pixIdx,pixSource);
+        }
+    }
+    else
+    {
+        qDebug()<<"ERROR:No have PixSource";
+    }
+
+
     qDebug()<<"---SourceManager::readJsonFileToSource---end";
 }
 

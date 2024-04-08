@@ -39,12 +39,22 @@ SourceCardWidget::SourceCardWidget(QWidget *parent)
 bool SourceCardWidget::initCard(SourceMetaData *data)
 {
 
+
     if(data==nullptr) return false;
+
     m_metaData=data;
+    data->show();
 
     if(m_metaData->Icon!=nullptr)
-        m_iconLabel->setPixmap(m_metaData->Icon->scaled(m_iconLabel->width(),m_iconLabel->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
-    if(m_metaData->Name!=nullptr)   
+    {
+
+        m_iconLabel->setPixmap(QPixmap(* m_metaData->Icon).scaled(m_iconLabel->width(),m_iconLabel->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+    }
+
+
+
+
+    if(m_metaData->Name!=nullptr)
     {
         m_nameLabel->setText(m_metaData->Name);
     }

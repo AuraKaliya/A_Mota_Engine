@@ -26,6 +26,8 @@ QVector<QLabel *> SourceTreeWidget::getGOSecondNodesList()
 
 void SourceTreeWidget::addFirstNode(QString name)
 {
+
+
     QLabel* firstNodeLabel=new QLabel(name,m_area);
     firstNodeLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     firstNodeLabel->setFixedHeight(50);
@@ -41,7 +43,39 @@ void SourceTreeWidget::addFirstNode(QString name)
 void SourceTreeWidget::addFirstNode(QString name, SourceCardViewWidget::ViewClass cardClass)
 {
     m_viewClassList.append(cardClass);
-    addFirstNode(name);
+    //addFirstNode(name);
+    ImageWidget* firstNodeLabel=new ImageWidget(m_area);
+
+    ImageWidget* imgWidget=new ImageWidget(firstNodeLabel);
+    if(cardClass==SourceCardViewWidget::ViewClass::IMG)
+    {
+        imgWidget->setImagePath(":/RESOURCE/default/image_icon.png");
+    }
+    else if(cardClass==SourceCardViewWidget::ViewClass::GO)
+    {
+        imgWidget->setImagePath(":/RESOURCE/default/gameObject_icon.png");
+    }
+    imgWidget->setFixedSize(50,50);
+    imgWidget->move(0,0);
+
+    QLabel * firstNodeNameLabel=new QLabel(name,firstNodeLabel);
+    firstNodeNameLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    firstNodeNameLabel->setFixedHeight(50);
+    firstNodeNameLabel->move(55,0);
+
+
+
+    firstNodeLabel->setFixedHeight(50);
+    firstNodeLabel->setFixedWidth(this->width());
+    firstNodeLabel->setImagePath(":/RESOURCE/default/Background2.png");
+    m_firstNodesList.append(firstNodeLabel);
+
+    m_viewsList.append(*new QVector<SourceCardViewWidget*>);
+    m_secondNodesList.append(*new QVector<StateLabel*>);
+    addSecondNode(m_secondNodesList.size()-1,QString("未定义"));
+    addSecondNode(m_secondNodesList.size()-1,QString("未定义2"));
+
+
 }
 
 void SourceTreeWidget::addSecondNode(int index, QString name)
@@ -54,6 +88,7 @@ void SourceTreeWidget::addSecondNode(int index, QString name)
     label->setFixedWidth(this->width()-20);
     label->setStateSwitch(SourceManageLabelState::Show,SourceManageLabelState::Hide);
     label->setStateSwitch(SourceManageLabelState::Hide,SourceManageLabelState::Show);
+
     m_secondNodesList[index].append(label);
 
     //
@@ -71,12 +106,12 @@ void SourceTreeWidget::addSecondNode(int index, QString name)
         case SourceManageLabelState::Show:
             showViewWidget(thisLabel->getLinkWidget());
             //test  在label中有添加自动转换的图片的功能
-            thisLabel->setStyleSheet("background-color:blue");
+            thisLabel->setStyleSheet("background-color:rgba(134,142,150,0.7);");
             break;
         case SourceManageLabelState::Hide:
             static_cast<SourceCardViewWidget*>(thisLabel->getLinkWidget())->resetSelectedState();
             hideViewWidget(thisLabel->getLinkWidget());
-            thisLabel->setStyleSheet("background-color:red");
+            thisLabel->setStyleSheet("background-color:rgba(255,255,255,0);");
             break;
         default:
             break;
@@ -100,7 +135,7 @@ void SourceTreeWidget::addSecondNode(int index, QString name)
 
 
 
-
+  label->setNowState(SourceManageLabelState::Hide);
 }
 
 void SourceTreeWidget::initSource()
@@ -149,7 +184,7 @@ void SourceTreeWidget::initSource()
     m_viewsList[0][0]->resize(m_viewsList[0][0]->width(),210*((index+2)/3)+20);
 
     qDebug()<<m_viewsList[0][0]->children();
-#endif
+
 
     for(auto it:SourceSystem::getInstance()->getManager()->getPixmapList())
     {
@@ -159,22 +194,60 @@ void SourceTreeWidget::initSource()
         card->setVisible(true);
         m_viewsList[0][0]->addCardWidget(card);
     }
+#endif
+
+    //从sourcesystem中获取图片资源
+    for(auto it:SourceSystem::getInstance()->getManager()->getPixSourceList())
+    {
+        //[0][0]:Image-未定义
+        SourceCardWidget* card=new SourceCardWidget(m_viewsList[0][0]);
+        card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromPixById(it->id()));
+        card->setVisible(true);
+        m_viewsList[0][0]->addCardWidget(card);
+    }
+
 
     for(auto it:SourceSystem::getInstance()->getManager()->getGameObjectSourceList())
     {
-        //[0][0]:Image-未定义
+
         SourceCardWidget* card=new SourceCardWidget(m_viewsList[1][0]);
 
         //card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOSourceByName(it->getName()));
         qDebug()<<"%%%%%%%%%"<<it->getId();
-        card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOById(it->getId()));
-        card->setVisible(true);
+        //card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOById(it->getId()));
+        card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOSourceByName(it->getName()));
+
+
+         card->setVisible(true);
         m_viewsList[1][0]->addCardWidget(card);
     }
 
-    //更新GameObjectNode
+    if(m_secondNodesList[0][0]->getNowState()==SourceManageLabelState::Show)
+    {
+        showViewWidget(m_secondNodesList[1][0]->getLinkWidget());
 
+        m_secondNodesList[0][0]->setStyleSheet("background-color:rgba(134,142,150,0.7);");
+    }
+    else
+    {
+        static_cast<SourceCardViewWidget*>(m_secondNodesList[0][0]->getLinkWidget())->resetSelectedState();
+        hideViewWidget(m_secondNodesList[0][0]->getLinkWidget());
+        m_secondNodesList[0][0]->setStyleSheet("background-color:rgba(255,255,255,0);");
+    }
+
+    if(m_secondNodesList[1][0]->getNowState()==SourceManageLabelState::Show)
+    {
+        showViewWidget(m_secondNodesList[1][0]->getLinkWidget());
+        m_secondNodesList[1][0]->setStyleSheet("background-color:rgba(134,142,150,0.7);");
+    }
+    else
+    {
+        static_cast<SourceCardViewWidget*>(m_secondNodesList[1][0]->getLinkWidget())->resetSelectedState();
+        hideViewWidget(m_secondNodesList[1][0]->getLinkWidget());
+        m_secondNodesList[1][0]->setStyleSheet("background-color:rgba(255,255,255,0);");
+    }
     adjustAreaSize();
+
 }
 
 
@@ -196,21 +269,27 @@ void SourceTreeWidget::adjustAreaSize()
     }
 
     m_area->resize(this->width(),height);
-
+    redoMove();
 }
 
 void SourceTreeWidget::redoMove()
 {
+    qDebug()<<"1 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
     int nowY=m_area->y();
     int heightLimit=this->height();
-    if(nowY+m_area->height()<heightLimit)
+
+    if(nowY>=0)
     {
-        m_area->move(m_area->x(),heightLimit-m_area->height());
+         m_area->move(m_area->x(),0);
     }
-    else if(nowY>0)
+    else if(nowY+m_area->height()<heightLimit)
     {
-        m_area->move(m_area->x(),0);
+         m_area->move(m_area->x(),heightLimit-m_area->height());
     }
+
+//    m_area->move(m_area->x(),0);
+    qDebug()<<"2 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
+    update();
 }
 
 void SourceTreeWidget::hideViewWidget(QWidget *w)
@@ -246,6 +325,9 @@ void SourceTreeWidget::showViewWidget(QWidget *w)
         adjustAreaSize();
     });
     w->setVisible(true);
+//    for(auto it:w->children())
+//         static_cast<QWidget*>(it)->setVisible(true);
+
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 

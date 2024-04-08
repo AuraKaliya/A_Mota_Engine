@@ -22,11 +22,16 @@ GameObjectItem::GameObjectItem(GameObject*obj,QObject *parent):QObject{parent},m
 
 GameObjectItem::GameObjectItem(GameObject *obj, QPixmap pix,QObject *parent):QObject{parent},m_pixType(Single),m_objPix(pix),m_nowLayer(0),m_nowZValue(0)
 {
-    setLinkObj(obj);
+    if(obj!=nullptr)
+    {
+        setLinkObj(obj);
+    }
+
     m_pixList.clear();
     m_pixList.resize(1);
     m_pixList.append(m_objPix);
     m_pixRect=m_objPix.rect();
+
     init();
 }
 
@@ -38,7 +43,10 @@ QRectF GameObjectItem::boundingRect() const
 
 void GameObjectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0,m_objPix.scaled(m_pixRect.width(),m_pixRect.height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+   if(state())
+   {
+        painter->drawPixmap(0,0,m_objPix.scaled(m_pixRect.width(),m_pixRect.height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+   }
 }
 
 GameObject *GameObjectItem::getLinkObj() const
@@ -54,19 +62,9 @@ void GameObjectItem::setLinkObj(GameObject *newLinkObj)
     }
 
     m_linkObj = newLinkObj;
-    if(newLinkObj!=nullptr)
-    {
-        connect(m_linkObj,&GameObject::posXChanged,this,[this](){
-            //qDebug()<<" GameObject::posXChanged ,nowPos"<<m_linkObj->getPosX()<<m_linkObj->getPosY();
-            m_posXFlag=true;
-            posChanged();
-        });
-        connect(m_linkObj,&GameObject::posYChanged,this,[this](){
-            //qDebug()<<" GameObject::posYChanged ,nowPos"<<m_linkObj->getPosX()<<m_linkObj->getPosY();
-            m_posYFlag=true;
-            posChanged();
-        });
-    }
+
+    //setSyncPos(true);
+
 }
 
 QPixmap GameObjectItem::getObjPix() const
@@ -141,6 +139,26 @@ void GameObjectItem::setNowZValue(int newNowZValue)
     m_nowZValue = newNowZValue;
     setZValue(m_nowZValue+((s_defaultLayerIdx-m_nowLayer)*s_layersHeight));
     qDebug()<<"ZValueChanged "<<zValue();
+}
+
+void GameObjectItem::setSyncPos(bool flag)
+{
+    if(m_linkObj!=nullptr)
+    {
+        if(flag)
+        {
+            connect(m_linkObj,&GameObject::posXChanged,this,[this](){
+                //qDebug()<<" GameObject::posXChanged ,nowPos"<<m_linkObj->getPosX()<<m_linkObj->getPosY();
+                m_posXFlag=true;
+                posChanged();
+            });
+            connect(m_linkObj,&GameObject::posYChanged,this,[this](){
+                //qDebug()<<" GameObject::posYChanged ,nowPos"<<m_linkObj->getPosX()<<m_linkObj->getPosY();
+                m_posYFlag=true;
+                posChanged();
+            });
+        }
+    }
 }
 
 int GameObjectItem::getNowLayer() const
@@ -270,4 +288,42 @@ void GameObjectItem::setId(unsigned int newId)
     return;
     m_id = newId;
     emit idChanged();
+}
+
+bool GameObjectItem::state() const
+{
+    return m_state;
+}
+
+void GameObjectItem::setState(bool newState)
+{
+    if (m_state == newState)
+    return;
+    m_state = newState;
+    emit stateChanged(m_state);
+}
+
+GameObjectItem::PixLayer GameObjectItem::pixLayer() const
+{
+    return m_pixLayer;
+}
+
+void GameObjectItem::setPixLayer(PixLayer newPixLayer)
+{
+    if (m_pixLayer == newPixLayer)
+    return;
+    m_pixLayer = newPixLayer;
+    emit pixLayerChanged();
+}
+
+void GameObjectItem::setItemState(int itemId, bool newState)
+{
+    qDebug()<<m_id<<"nowState:"<<m_state<<(m_linkObj!=nullptr) <<"get signal:   id--newState"<<itemId<<" "<<newState;
+    if(m_linkObj!=nullptr)
+    {
+      if(m_id==itemId)
+      {
+            setState(newState);
+      }
+    }
 }

@@ -80,7 +80,7 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
             throw std::runtime_error("enqueue on stopped ThreadPool");
 
         //tasks.emplace(task{ (*task)(); }); // 将task指针所指向的packaged_task对象转换为一个无参的函数对象，并添加到任务队列中
-        tasks.emplace( (){(*task)(); });
+        tasks.emplace( [&task](){(*task)(); });
     }
     condition.notify_one(); // 通知一个在条件变量上等待的线程，有新的任务可以执行了
     return res; // 返回future对象，供调用者获取异步操作结果

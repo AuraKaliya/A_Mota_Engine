@@ -5,8 +5,10 @@
 GameShowView::GameShowView(QWidget *parent)
     : QGraphicsView(parent)
 {
-    setFixedSize(1052,752);
+    //setFixedSize(1050,750);
     //setBackgroundBrush(Qt::white);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setDragMode(QGraphicsView::RubberBandDrag);
 }
 

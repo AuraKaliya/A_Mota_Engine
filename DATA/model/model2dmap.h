@@ -160,6 +160,7 @@ public:
     QVector<QVector<int> > getMapMatrix() const;
 
     QPoint getElementPoint(int x,int y);
+    QPair<int,int> getPerElementSize();
 private:
 
     int m_mapWidth;

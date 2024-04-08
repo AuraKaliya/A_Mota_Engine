@@ -14,18 +14,20 @@
 
 #include <UI/componentWidget/gameobjectpropertiesshowwidget.h>
 #include <UI/componentWidget/sourcetreewidget.h>
-
+#include <DATA/baseClass/uiwidget.h>
 
 #include <DATA/baseClass/gameobject.h>
 #include <TOOL/sourceTool/sourcesystem.h>
 
 
 /*
+ * 添加新GameObject时弹出的信息预编辑界面
+ *
     这是一个“独立”的顶层widget，能够引入其他的组件进行逻辑处理，然后通过与系统进行直接交互达到数据更新的功能。
     它会被放到editWidget中进行存放，并由editWidget进行调用显示。
 */
 
-class AddGameObjectInfoWidget : public QWidget
+class AddGameObjectInfoWidget : public UIWidget
 {
     Q_OBJECT
 
@@ -60,7 +62,7 @@ public:
     void setLinkObject(GameObject *newLinkObject);
     void setLinkSourceTreeWidget(SourceTreeWidget*);
     void updateList();
-
+    void setUIStyle()override;
 private:
     void initPixLabel();
     void initNodesWidget();

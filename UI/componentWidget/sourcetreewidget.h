@@ -9,6 +9,8 @@
 #include <UI/componentWidget/sourcecardwidget.h>
 #include <UI/componentWidget/statelabel.h>
 #include <UI/componentWidget/sourcecardviewwidget.h>
+#include <UI/componentWidget/imagewidget.h>
+
 class SourceTreeWidget : public QWidget
 {
     Q_OBJECT
@@ -18,7 +20,7 @@ private:
     SourceCardViewWidget* m_nowDropWidget=nullptr;
     SourceCardViewWidget* m_nowFocusWidget=nullptr;
     bool m_init=false;
-    QVector <QLabel*> m_firstNodesList;
+    QVector <QWidget*> m_firstNodesList;
     QVector<QVector <StateLabel* > > m_secondNodesList{};
     QVector<QVector<SourceCardViewWidget*> > m_viewsList{};
     QVector<SourceCardViewWidget::ViewClass> m_viewClassList{};

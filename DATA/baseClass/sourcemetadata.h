@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPixmap>
 #include <QString>
-
+#include <QDebug>
 class SourceMetaData : public QObject
 {
     Q_OBJECT
@@ -24,6 +24,10 @@ public:
         Information=it.Information;
         Class=it.Class;
     }
+
+    void show();
+
+
 signals:
 
 };

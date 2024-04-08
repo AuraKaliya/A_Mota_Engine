@@ -25,7 +25,6 @@ void WheelSlideWidget::addWidgetInArea(QWidget *w, int x, int y)
     w->setParent(m_area);
     w->move(x,y);
     m_area->adjustSize();
-
 }
 
 int WheelSlideWidget::getBorder() const
@@ -48,11 +47,11 @@ WheelSlideWidget::WheelSlideWidget(QWidget *parent)
     : QWidget{parent}
 {
     resize(400,400);
-    setStyleSheet("background-color:grey;");
+    //setStyleSheet("background-color:grey;");
 
     m_area=new QWidget(this);
     m_area->move(0,0);
-    m_area->setStyleSheet("background-color:white;");
+    //m_area->setStyleSheet("background-color:white;");
     setArea(width(),height());
 }
 

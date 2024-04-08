@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <DATA/baseClass/gameobject.h>
 #include <QObject>
-
+#include <DATA/baseClass/pixsource.h>
 
 /*
  * 以json包的形式更新
@@ -26,12 +26,14 @@ class GameObjectItem:public QObject,public QGraphicsItem
     Q_PROPERTY(int nowLayer READ getNowLayer WRITE setNowLayer NOTIFY nowLayerChanged)
     Q_PROPERTY(int nowZValue READ getNowZValue WRITE setNowZValue NOTIFY nowZValueChanged)
     Q_PROPERTY(PixType pixType READ getPixType WRITE setPixType NOTIFY pixTypeChanged)
+    Q_PROPERTY(PixLayer pixLayer READ pixLayer WRITE setPixLayer NOTIFY pixLayerChanged)
     Q_PROPERTY(int interval READ getInterval WRITE setInterval NOTIFY intervalChanged)
-
+    Q_PROPERTY(bool state READ state WRITE setState NOTIFY stateChanged)
     Q_PROPERTY(unsigned int id READ getId WRITE setId NOTIFY idChanged)
 
 public:
     enum PixType{Single,Multiple};
+    enum PixLayer{Background,Object,Special};
 
 public:
     GameObjectItem(GameObject*obj=nullptr,QObject *parent=nullptr );
@@ -46,6 +48,7 @@ public:
     void setObjPix(QPixmap newObjPix);
 
 
+
     static QVector<QString> getLayers();
     static bool addLayer(QString layerName);
     static bool delLayer(int i);
@@ -57,6 +60,9 @@ public:
     static void registerId(GameObjectItem*);
     int getNowZValue() const;
     void setNowZValue(int newNowZValue);
+
+    void setSyncPos(bool flag);
+
 
     int getNowLayer() const;
     void setNowLayer(int newNowLayer);
@@ -81,6 +87,14 @@ public:
     bool getScriptBindState() const;
     void setScriptBindState(bool newScriptBindState);
 
+    bool state() const;
+    void setState(bool newState);
+
+    GameObjectItem::PixLayer pixLayer() const;
+    void setPixLayer(PixLayer newPixLayer);
+
+    void setItemState(int itemId,bool newState);
+
 private:
     void posChanged();
 signals:
@@ -95,6 +109,10 @@ signals:
 
     void registerItem(GameObjectItem*,unsigned int);
     void resetPixScale();
+    void stateChanged(bool);
+
+    void pixLayerChanged();
+
 private:
     void init();
 
@@ -102,6 +120,7 @@ protected:
     QPixmap m_objPix;
     QRect m_pixRect;
     QMap<int,QPixmap*> m_pixDictionary{};
+    QMap<int ,PixSource*> m_pixSourceDictionary{};
     GameObject* m_linkObj=nullptr;
 private:
     QVector<QPixmap> m_pixList;
@@ -128,6 +147,8 @@ private:
 
 
     unsigned int m_id;
+    bool m_state=true;
+    PixLayer m_pixLayer;
 };
 
 #endif // GAMEOBJECTITEM_H

@@ -19,8 +19,10 @@ class GameShowWidget : public UIWidget
 public:
     explicit GameShowWidget(QWidget *parent = nullptr);
     void init()override;
+    void demoInit() override;
     void dropWidgetShow();
     void dropWidgetHide();
+    void setUIStyle()override;
 protected:
 
     void mouseMoveEvent(QMouseEvent*e)override;
@@ -31,7 +33,16 @@ protected:
 private:
     GameShowView* m_gameShowView=nullptr;
     GameObjectDropWidget* dropWidget=nullptr;
+    QWidget * m_demoDataWidget=nullptr;
     QPoint m_mousePos;
+
+    //demo相关
+
+    //预加载demo：mota
+
+
+
+
 signals:
 
 };

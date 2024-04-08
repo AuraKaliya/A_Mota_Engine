@@ -47,9 +47,13 @@ class GameObject : public QObject
     Q_PROPERTY(bool superEdit READ getSuperEdit WRITE setSuperEdit NOTIFY superEditChanged)
     Q_PROPERTY(bool animationState READ animationState WRITE setAnimationState NOTIFY animationStateChanged)
     Q_PROPERTY(int pixId READ getPixId WRITE setPixId NOTIFY pixIdChanged)
-
+    Q_PROPERTY(int itemId READ itemId WRITE setItemId NOTIFY itemIdChanged)
     Q_PROPERTY(bool loadProperty READ getLoadProperty WRITE setgetLoadProperty NOTIFY loadPropertyChanged)
+    Q_PROPERTY(bool drawState READ drawState WRITE setDrawState NOTIFY drawStateChanged)
     Q_PROPERTY(Type type READ getType WRITE setType NOTIFY typeChanged)
+
+    Q_PROPERTY(bool pixSourceFlag READ pixSourceFlag WRITE setPixSourceFlag NOTIFY pixSourceFlagChanged)
+
     Q_PROPERTY(QJsonObject data READ getData WRITE setData NOTIFY dataChanged)
 
 public:
@@ -71,14 +75,16 @@ protected:
     static bool m_registFlag;
 
     QVector<ComponentObject*> m_myComponents;
+    QMap<QString,ComponentObject*> m_componentDictionary;
 
     GameObject* m_linkGameObject=nullptr;
 
 public:
     explicit GameObject(QObject *parent = nullptr);
 
+    ComponentObject* getComponent(QString name);
 
-    virtual void operator <<(GameObject& obj);
+    void operator <<(GameObject& obj);
 
 
     unsigned int getId() const;
@@ -152,6 +158,15 @@ public:
     bool animationState() const;
     void setAnimationState(bool newAnimationState);
 
+    bool drawState() const;
+    void setDrawState(bool newDrawState);
+
+    int itemId() const;
+    void setItemId(int newItemId);
+
+    bool pixSourceFlag() const;
+    void setPixSourceFlag(bool newPixSourceFlag);
+
 signals:
     void idChanged();
     void nameChanged();
@@ -186,6 +201,16 @@ signals:
 
     void animationStateChanged();
 
+    void drawStateChanged(bool);
+
+    void itemDrawStateChanged(int,bool);
+
+    void initialized();
+
+    void itemIdChanged();
+
+    void pixSourceFlagChanged();
+
 private:
 
     bool m_loadProperty;
@@ -203,6 +228,9 @@ private:
     bool m_posInit;
     QString m_script;
     bool m_animationState;
+    bool m_drawState=true;
+    int m_itemId;
+    bool m_pixSourceFlag;
 };
 
 #endif // GAMEOBJECT_H

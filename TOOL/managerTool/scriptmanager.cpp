@@ -209,6 +209,14 @@ void ScriptManager::addScript(GameObjectItem *item, QString fileName)
     //注册绑定item和script
     registerItemToScriptFile(item->getId(),fileName);
     registerItemToScript(item->getId(),script);
+
+    connect(item,&GameObjectItem::stateChanged,[=](bool flag){
+        if(!flag)
+        {
+            delScriptFromItem(item);
+        }
+    });
+
 }
 
 void ScriptManager::addScript(Script *script)
@@ -216,13 +224,12 @@ void ScriptManager::addScript(Script *script)
     lua_State* lua=luaL_newstate();
     script->m_lua=lua;
     luaL_openlibs(lua);
-    qDebug()<<"filename: "<<script->m_fileName.toStdString().c_str();
+    //qDebug()<<"filename: "<<script->m_fileName.toStdString().c_str();
     luaL_dofile(lua,script->m_fileName.toStdString().c_str());
 
-    qDebug()<<"addScript!";
+    //qDebug()<<"addScript!";
     lua_getglobal(lua,"testname");
-    qDebug()<<"testName: "<<lua_tostring(lua,-1);
-
+    //qDebug()<<"testName: "<<lua_tostring(lua,-1);
 
     //注册函数
     registerFunc(lua);
@@ -245,9 +252,9 @@ void ScriptManager::delScriptFromItem(GameObjectItem *item)
 
     if(script!=nullptr)
     {
-        qDebug()<<"ScriptManager::delScriptFromItem!~~~~~~~~~~~~~~~";
+        //qDebug()<<"ScriptManager::delScriptFromItem!~~~~~~~~~~~~~~~";
         bool flag=m_scriptList.removeOne(script);
-        qDebug()<<"flag:"<<flag;
+        //qDebug()<<"flag:"<<flag;
 
         //！！！！！！！！！！！！！！
         //此处需要去实现script的析构函数
@@ -284,13 +291,13 @@ void ScriptManager::registerFunc(lua_State *lua)
 void ScriptManager::registerItemToScriptFile(unsigned int id, QString fileName)
 {
     m_itemToScriptFileNameDictionary[id]=fileName;
-    qDebug()<<"registerItemToScriptFile"<<id<< "  "<<fileName;
+    //qDebug()<<"registerItemToScriptFile"<<id<< "  "<<fileName;
 }
 
 void ScriptManager::registerItemToScript(unsigned int id, Script *script)
 {
     m_itemToScriptDictionary[id]=script;
-    qDebug()<<"registerItemToScript";
+    //qDebug()<<"registerItemToScript";
 }
 
 QString ScriptManager::getScriptFileNameByItemId(unsigned int id)
@@ -350,18 +357,14 @@ ScriptManager::ScriptManager(QObject *parent)
 
     m_updater->start();
 
-
-
     //test
-    QVariant var1("1");
-    QVariant var2("1.5");
-    QVariant var3("s");
-    qDebug()<<"test var1:  "<<var1.toString()<<var1.toInt()<<var1.toUInt()<<var1.toDouble();
-    qDebug()<<"test var2:  "<<var2.toString()<<var2.toInt()<<var2.toUInt()<<var2.toDouble();
-    qDebug()<<"test var3:  "<<var3.toString()<<var3.toInt()<<var3.toUInt()<<var3.toDouble();
+    //QVariant var1("1");
+    //QVariant var2("1.5");
+    //QVariant var3("s");
+    //qDebug()<<"test var1:  "<<var1.toString()<<var1.toInt()<<var1.toUInt()<<var1.toDouble();
+    //qDebug()<<"test var2:  "<<var2.toString()<<var2.toInt()<<var2.toUInt()<<var2.toDouble();
+    //qDebug()<<"test var3:  "<<var3.toString()<<var3.toInt()<<var3.toUInt()<<var3.toDouble();
     //test
-
-
 
 }
 

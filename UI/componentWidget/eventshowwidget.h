@@ -8,7 +8,7 @@
 #include <QLineEdit>
 
 #include <TOOL/eventTool/eventsystem.h>
-
+#include <DATA/enginestyle.h>
 class EventShowWidget : public QWidget
 {
     Q_OBJECT
@@ -25,7 +25,7 @@ private:
     QVector<QWidget* > m_insWidget{};
     QVector<int> m_insLayer{};
     QLineEdit * m_eventBox=nullptr;
-    QWidget * m_addWidget=nullptr;
+    QPushButton * m_addWidget=nullptr;
 
     QString m_nowEvent;
     int spacing=10;

@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <TOOL/template/Registor.hpp>
 
+using IntSignalFunc=void(*)(int);
 class GameObject;
 class ComponentObject : public QObject
 {
@@ -20,9 +21,15 @@ public:
     virtual void bindToGameObject(GameObject* go);
 
     virtual bool waitForSignal(QObject* obj,const char * signal,const unsigned int ms=3000);
-
+    virtual int waitForIntSignal(QObject* obj, const char *signal,const unsigned int ms=3000);
 
 signals:
+private:
+    int  m_result;
+    QEventLoop m_loop;
+
+private slots:
+    void solveIntSignal(int number);
 
 };
 

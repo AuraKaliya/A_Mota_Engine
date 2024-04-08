@@ -5,13 +5,16 @@ DynamicItem::DynamicItem(GameObject *obj, QPixmap pix, QObject *parent):GameObje
     if(obj!=nullptr)
     {
         obj->setNowState("Normal");
-        connect(obj,&GameObject::nowStateChanged,this,[this](){
-            qDebug()<<"GameObject::nowStateChanged";
-            qDebug()<<m_stateList;
-            qDebug()<<getLinkObj()->getNowState();
-            qDebug()<<"GameObject::nowStateChanged--end";
-            changeState(getLinkObj()->getNowState());
-        });
+
+        //需要提出来，作为一个单独的控制函数   setStateMonited(true);
+//        connect(obj,&GameObject::nowStateChanged,this,[this](){
+//            qDebug()<<"GameObject::nowStateChanged";
+//            qDebug()<<m_stateList;
+//            qDebug()<<getLinkObj()->getNowState();
+//            qDebug()<<"GameObject::nowStateChanged--end";
+//            changeState(getLinkObj()->getNowState());
+//        });
+        //已转移至  setSyncPixState
     }
 
 }
@@ -19,7 +22,10 @@ DynamicItem::DynamicItem(GameObject *obj, QPixmap pix, QObject *parent):GameObje
 void DynamicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     //
-    painter->drawPixmap(0,0,m_nowPix);
+    if(state())
+    {
+        painter->drawPixmap(0,0,m_nowPix);
+    }
 }
 
 void DynamicItem::initPix(QVector<QString> stateList, QVector<QVector<QPixmap *> > pixList)
@@ -59,10 +65,10 @@ void DynamicItem::initPix(QVector<QString> stateList, QVector<QVector<QPixmap *>
 void DynamicItem::initPix(QVector<QString> stateList, QVector<QVector<int> > stateIndexList, int startX, int startY, int perWidth, int perHeight, int xInterval, int yInterval)
 {
     qDebug()<<"DynamicItem::initPix";
-    for(auto it:m_pixList)
-    {
-        delete &it;
-    }
+//    for(auto it:m_pixList)
+//    {
+//        delete &it;
+//    }
     m_pixList.clear();
 
     m_stateList=stateList;
@@ -88,13 +94,15 @@ void DynamicItem::initPix(QVector<QString> stateList, QVector<QVector<int> > sta
         {
             m_pixList.append(*new QPixmap(m_objPix.copy(nowX,nowY,perWidth,perHeight)));
             nowX+=(xInterval+perWidth);
+            qDebug()<<"$$ x "<<nowX;
         }
         nowY+=(yInterval+perHeight);
+        qDebug()<<"$$ y "<<nowY;
     }
+    qDebug()<<" check--:"<<m_pixList<<m_pixList.size() <<m_pixIndexList <<m_pixIndexList.size();
     m_nowPixIndexList=m_pixIndexList[0];
 
     m_nowPix=m_pixList[m_nowPixIndexList[0]];
-
 
     m_timer.setInterval(100);
     connect(&m_timer,&QTimer::timeout,this,[this](){
@@ -114,6 +122,34 @@ void DynamicItem::initPix(QVector<QString> stateList, QVector<QVector<int> > sta
     });
 
     m_timer.start();
+}
+
+void DynamicItem::setLayer(PixLayer layer)
+{
+    switch(layer)
+    {
+    case PixLayer::Background:
+    {
+        setNowLayer(0);
+        setZValue(0);
+    }
+        break;
+    case PixLayer::Object:
+    {
+        setNowLayer(1);
+        setZValue(0);
+    }
+        break;
+    case PixLayer::Special:
+    {
+        setNowLayer(2);
+        setZValue(0);
+    }
+        break;
+    default:
+        qDebug()<<"Error: DynamicItem::setLayer : no have this PixLayer!";
+        break;
+    }
 }
 
 void DynamicItem::changeState(QString state)
@@ -148,4 +184,21 @@ void DynamicItem::changeState(QString state)
 
     qDebug()<<"--DynamicItem::changeState--end";
 
+}
+
+void DynamicItem::setSyncPixState(bool flag)
+{
+    if(m_linkObj!=nullptr)
+    {
+        if(flag)
+        {
+            connect(m_linkObj,&GameObject::nowStateChanged,this,[this](){
+                qDebug()<<"GameObject::nowStateChanged";
+                qDebug()<<m_stateList;
+                qDebug()<<getLinkObj()->getNowState();
+                qDebug()<<"GameObject::nowStateChanged--end";
+                changeState(getLinkObj()->getNowState());
+            });
+        }
+    }
 }

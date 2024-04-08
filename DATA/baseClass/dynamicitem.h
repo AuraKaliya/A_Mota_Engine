@@ -12,9 +12,14 @@ class DynamicItem : public GameObjectItem
 public:
     explicit DynamicItem(GameObject*obj,QPixmap pix,QObject *parent=nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget ) override;
+
     void initPix(QVector<QString> stateList,QVector<QVector<QPixmap*> > pixList);
     void initPix(QVector<QString> stateList,QVector<QVector<int> > stateIndexList,int startX=0, int startY=0, int perWidth=32, int perHeight=32, int xInterval=0, int yInterval=1);
+    void setLayer(GameObjectItem::PixLayer layer);
     void changeState(QString);
+
+    void setSyncPixState(bool flag);
+
 
 private:
 

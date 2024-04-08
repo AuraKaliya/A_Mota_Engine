@@ -10,26 +10,28 @@ Map2DItem::Map2DItem(GameObject*obj,QPixmap pix,QObject *parent)
 
 void Map2DItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    GameObjectItem::paint(painter,option,widget);
-    if(m_initState)
+    if(state())
     {
-        qDebug()<<"map2dItem paint";
-       // qDebug()<<m_mapPix;
-        qDebug()<<m_mapPix;
-        //qDebug()<<"check0: Map2DItem"<<(int)&(*this);
-        int i=0;
-        for(auto it:m_mapPix)
+        GameObjectItem::paint(painter,option,widget);
+        if(m_initState)
         {
-            int j=0;
-            for(auto it2:it)
+            qDebug()<<"map2dItem paint";
+            // qDebug()<<m_mapPix;
+            qDebug()<<m_mapPix;
+            //qDebug()<<"check0: Map2DItem"<<(int)&(*this);
+            int i=0;
+            for(auto it:m_mapPix)
             {
-                painter->drawPixmap(i*(m_xInterval),j*(m_yInterval),*it2);
-                j++;
+                int j=0;
+                for(auto it2:it)
+                {
+                    painter->drawPixmap(i*(m_xInterval),j*(m_yInterval),it2);
+                    j++;
+                }
+                i++;
             }
-            i++;
         }
     }
-
 }
 
 
@@ -64,9 +66,10 @@ void Map2DItem::initMap(int xScale, int yScale, QMap<int, QPixmap *> map, int de
 
 }
 
+
 void Map2DItem::setPix(int x, int y, int idx)
 {
-    m_mapPix[y][x]=m_pixDictionary.find(idx).value();
+    m_mapPix[y][x]=QPixmap(*m_pixDictionary.find(idx).value());
     update();
 }
 
@@ -105,12 +108,12 @@ void Map2DItem::updateMap()
 
     for(int i=0;i<m_yScale;i++)
     {
-        QVector<QPixmap*> tmpVector;
+        QVector<QPixmap> tmpVector;
         for(int j=0;j<m_xScale;j++)
         {
-            QPixmap* pix=m_pixDictionary[m_mapIdx[j][i]];
+            QPixmap pix=QPixmap(*m_pixDictionary[m_mapIdx[j][i]]);
             //qDebug()<<"pixInterval:"<<m_xInterval<<m_yInterval;
-            *pix = pix->scaled(m_xInterval,m_yInterval);
+            pix = pix.scaled(m_xInterval,m_yInterval);
             //qDebug()<<"pixSize:"<<pix->size();
             tmpVector.append(pix);
         }
@@ -134,14 +137,14 @@ void Map2DItem::resetMap(QVector<QVector<int> > vector)
 
     for(int i=0;i<m_yScale;i++)
     {
-        QVector<QPixmap*> tmpVector;
+        QVector<QPixmap> tmpVector;
         for(int j=0;j<m_xScale;j++)
         {
 
-            QPixmap* pix=m_pixDictionary[vector[j][i]];
+            QPixmap pix=QPixmap(*m_pixDictionary[vector[j][i]]);
             //qDebug()<<"pixInterval:"<<m_xInterval<<m_yInterval;
 
-            *pix = pix->scaled(m_xInterval,m_yInterval);
+            pix = pix.scaled(m_xInterval,m_yInterval);
             //qDebug()<<"pixSize:"<<pix->size();
 
             tmpVector.append(pix);

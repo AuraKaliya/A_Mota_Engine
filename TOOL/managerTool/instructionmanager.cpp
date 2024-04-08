@@ -2,7 +2,7 @@
 QMap<QString,GameDemo*> InstructionManager::m_demoDictionary={};
 QMap<QString,QVector<QPair<QString,SoluteFunc> > > InstructionManager::m_insFunctionDictionary{};
 InstructionManager * InstructionManager::m_instance=nullptr;
-InstructionManager *InstructionManager::getInstance(QObject *parent)
+InstructionManager * InstructionManager::getInstance(QObject *parent)
 {
     if(m_instance==nullptr)
     {
@@ -49,8 +49,12 @@ bool InstructionManager::soluteInstruction(InstructionObject*insObj)
         if(list[1]=="Demo")
         {
             qDebug()<<"Solute Demo Ins";
+
+
             for(auto it:insContext->insPacket)
             {
+                QString insStr=QString("Demo:"+it.insName);
+                emit instructionSend(insStr);
                 GameObject* obj=SourceSystem::getInstance()->getManager()->getObjectById(it.ObjectIndex);
                 findInsFuncFromDictionary("Demo",it.insName)(obj,it.value);
                 it.soluteState=true;

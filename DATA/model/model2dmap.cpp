@@ -221,6 +221,7 @@ Model2DMap::Model2DMap(QObject *parent):ComponentObject{parent}
 void Model2DMap::tick()
 {
     qDebug()<<"---Model2DMap::tick---";
+    qDebug()<<m_mapMatrix;
     qDebug()<<"---Model2DMap::tick---end";
 }
 
@@ -284,6 +285,9 @@ bool Model2DMap::elementIsValied(int x, int y)
     {
         if(x>-1&&y>-1&&x<m_valiedMatrix.size()&&y<m_valiedMatrix[x].size())
         {
+            //qDebug()<<"check:elementIsValied:"<<x<<y;
+            //qDebug()<<"check:elementIsValied:"<<m_valiedMatrix;
+            //qDebug()<<"check: valied"<<m_valiedMatrix[y][x];
             return m_valiedMatrix[y][x];
         }
         else
@@ -357,4 +361,9 @@ QVector<QVector<int> > Model2DMap::getMapMatrix() const
 QPoint Model2DMap::getElementPoint(int x, int y)
 {
     return QPoint(x*perElementSizeW,y*perElementSizeH);
+}
+
+QPair<int, int> Model2DMap::getPerElementSize()
+{
+    return QPair<int,int>(perElementSizeW,perElementSizeH);
 }

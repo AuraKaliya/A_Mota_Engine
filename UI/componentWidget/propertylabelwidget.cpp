@@ -1,7 +1,11 @@
 #include "propertylabelwidget.h"
 
+#include <DATA/enginestyle.h>
+
+#include <qpainter.h>
+
 PropertyLabelWidget::PropertyLabelWidget(QWidget *parent)
-    : QWidget{parent}
+    : UIWidget{parent}
 {
     m_titleLabel=new QLabel(this);
     m_valueLabel=new QLineEdit(this);
@@ -68,11 +72,23 @@ void PropertyLabelWidget::initWidget()
     m_titleLabel->setAlignment(Qt::AlignCenter);
     m_valueLabel->setAlignment(Qt::AlignCenter);
 
-    m_titleLabel->setStyleSheet("background-color:white;");
-    m_valueLabel->setStyleSheet("background-color:white;");
+    setUIStyle();
 }
 
 void PropertyLabelWidget::setHotUpdate(bool flag)
 {
     m_hotUpdate=flag;
+}
+
+void PropertyLabelWidget::setUIStyle()
+{
+    m_titleLabel->setStyleSheet(EngineStyle::getInstance()->editLabelStyle());
+    m_valueLabel->setStyleSheet(EngineStyle::getInstance()->editLabelStyle());
+}
+
+void PropertyLabelWidget::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+    painter.drawLine(QPoint(m_titleLabel->x()+m_titleLabel->width(),m_titleLabel->y()),QPoint(m_titleLabel->x()+m_titleLabel->width(),m_titleLabel->y()+m_titleLabel->height()));
+
 }

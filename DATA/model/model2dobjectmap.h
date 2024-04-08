@@ -2,7 +2,6 @@
 #define MODEL2DOBJECTMAP_H
 
 #include <QObject>
-#include <QObject>
 #include <QPoint>
 #include <QVector>
 #include <QEventLoop>
@@ -26,8 +25,12 @@ public:
     void initMap(int w,int h,QVector<QVector <int> >mapMatrix);
     void initHero(int heroId);
     QPair<int,int> getHeroPos();
+    int getHeroId();
     QPair<int,int>getObjectPos(int id);
     void objectMove(int oldX,int oldY,int newX,int newY);
+    void addObject(int x,int y,int index);
+    void setElement(int x,int y,int index);
+    void delObject(int index);
 
     int getMapWidth() const;
     void setMapWidth(int newMapWidth);
@@ -38,21 +41,36 @@ public:
     bool hasHero() const;
     void setHasHero(bool newHasHero);
 
+    void clearHero();
+    void setHeroPos(int heroId,int x,int y);
     QVector<QVector<int> > mapMatrix() const;
 
+    void checkState(int objId1,int objId2);
+
+    QObject *signalLinkObj() const;
+    void setSignalLinkObj(QObject *newSignalLinkObj);
 
 
+    void setItemPos(int x,int y,int id);
+    int getItemId(int x,int y);
+
+
+    void initItemMap(QVector<QVector <int> > itemMap);
 
 signals:
 
     void mapWidthChanged();
     void mapHeightChanged();
     void hasHeroChanged(bool);
-    void ObjectMove(int ,int ,int);
-    void ObjectOverLap(int,int,int,int);
+
+    void objectMoved(Model2DObjectMap* map,int index,int oX,int oY,int nX,int nY);
+    void objectOverlaped(Model2DObjectMap* map,int index1,int x1,int y1,int index2,int x2,int y2);
+
+    void heroCleared(int);
 
 private:
     QVector<QVector <int> > m_mapMatrix;
+    QVector<QVector<int> > m_itemMatrix;
     int m_heroPosX;
     int m_heroPosY;
     int m_heroId;

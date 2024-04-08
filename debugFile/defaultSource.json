@@ -1,0 +1,10 @@
+{	
+    "Type":"Source",
+    "Data":{
+        "Image":{
+            "ImgPath":"D:/QTF/A_Mota_Engine/RESOURCE/default/MotaPix",
+             "ImgIdx":[1100001,1100002,1100003,1100004,1100005,1100006],
+             "ImgList":["wall1.png","wall2.png","wall3.png","Hero1.png","Monster1.png","Monster2.png"]
+        }
+    }
+}

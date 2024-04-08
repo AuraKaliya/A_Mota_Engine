@@ -7,7 +7,7 @@ EventShowWidget::EventShowWidget(QWidget *parent)
     : QWidget{parent}
 {
     setFixedWidth(500);
-    setStyleSheet("border-radius:10;background-color:grey;");
+    setStyleSheet("QWidget{border-radius:10px;background-color:rgba(248,249,250,0.7);}");
 
     //test
     //QPainterPath PainterPath;	//绘制一个QPainter路径对象
@@ -20,9 +20,9 @@ EventShowWidget::EventShowWidget(QWidget *parent)
     m_eventBox=new QLineEdit(this);
     m_eventBox->setGeometry(10,10,200,40);
 
-    m_addWidget=new QWidget(this);
+    m_addWidget=new QPushButton("Add",this);
     m_addWidget->resize(200,40);
-    m_addWidget->setStyleSheet("background-color:green");
+    m_addWidget->setStyleSheet(EngineStyle::getInstance()->firstButtonStyle());
     m_addWidget->move(290,spacing);
     m_insWidget.append(m_addWidget);
     m_insLayer<<-1;
@@ -41,7 +41,7 @@ void EventShowWidget::initWidget(QString eventName)
     if(list.size()>0)
     {
         m_eventBox->setText(eventName);
-        //qDebug()<<"hhaha"<<eventName;
+        //qDebug()<<"hhaha~~~"<<eventName;
         for(auto it:list)
         {
             QString insName=it->getInsName();
@@ -78,10 +78,10 @@ QWidget *EventShowWidget::addIns()
 
     if(m_insWidget.size()%2==0)
     {
-        w->setStyleSheet("background-color:red");
+        w->setStyleSheet("background-color:rgba(248,249,250,0.7)");
     }else
     {
-        w->setStyleSheet("background-color:blue");
+        w->setStyleSheet("background-color:rgba(223,231,233,0.7)");
     }
     qDebug()<<"addIns";
     w->resize(200,40);
@@ -110,10 +110,10 @@ QWidget *EventShowWidget::addIns(QString insName)
 
     if(m_insWidget.size()%2==0)
     {
-        w->setStyleSheet("background-color:red");
+        w->setStyleSheet("background-color:rgba(169,175,178,0.7)");
     }else
     {
-        w->setStyleSheet("background-color:blue");
+        w->setStyleSheet("background-color:rgba(198,201,207,0.7)");
     }
     //qDebug()<<"addIns";
     w->resize(200,40);
@@ -155,7 +155,8 @@ void EventShowWidget::paintEvent(QPaintEvent *e)
     canDrawingPathArea.setFillRule(Qt::WindingFill); // 多块区域组合填充模式
     painter.setClipPath(canDrawingPathArea);
 
-    QColor color(Qt::darkRed);
+    QColor color;
+    color.setRgba(qRgba(225,231,234,180));
     color.setAlpha(200);
     painter.setPen(Qt::NoPen);
     painter.setBrush(color);

@@ -1,6 +1,46 @@
 #include "modeltower.h"
 
 
+QMap<int, QPair<int, int> > ModelTower::layerUpPos() const
+{
+    return m_layerUpPos;
+}
+
+void ModelTower::setLayerUpPos(const QMap<int, QPair<int, int> > &newLayerUpPos)
+{
+    m_layerUpPos = newLayerUpPos;
+}
+
+QMap<int, QPair<int, int> > ModelTower::layerDownPos() const
+{
+    return m_layerDownPos;
+}
+
+void ModelTower::setLayerDownPos(const QMap<int, QPair<int, int> > &newLayerDownPos)
+{
+    m_layerDownPos = newLayerDownPos;
+}
+
+QPair<int, int> ModelTower::getUpPos(int layer)
+{
+    return m_layerUpPos.find(layer).value();
+}
+
+QPair<int, int> ModelTower::getDownPos(int layer)
+{
+    return m_layerDownPos.find(layer).value();
+}
+
+QVector<int> ModelTower::layerPreLinkList() const
+{
+    return m_layerPreLinkList;
+}
+
+void ModelTower::setLayerPreLinkList(const QVector<int> &newLayerPreLinkList)
+{
+    m_layerPreLinkList = newLayerPreLinkList;
+}
+
 ModelTower::ModelTower(QObject *parent)
     : ComponentObject{parent}
 {
@@ -14,8 +54,6 @@ void ModelTower::tick()
     qDebug()<<"m_nowLayer: "<<QString::number(m_nowLayer);
     qDebug()<<"LinkList: " <<m_layerLinkedList;
 }
-
-
 
 unsigned int ModelTower::getNextLayerId()
 {
@@ -55,6 +93,15 @@ void ModelTower::nextLayer()
     m_nowLayer=m_layerLinkedList[m_nowLayer];
 }
 
+int ModelTower::getNextLayer()
+{
+    return m_layerLinkedList[m_nowLayer];
+}
+
+int ModelTower::getPreLayer()
+{
+    return m_layerPreLinkList[m_nowLayer];
+}
 
 unsigned int ModelTower::getAllLayers() const
 {

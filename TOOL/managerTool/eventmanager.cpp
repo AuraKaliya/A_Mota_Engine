@@ -101,14 +101,12 @@ void EventManager::eventTrigger(QString event)
 EventManager::EventManager(QObject *parent)
     : QObject{parent}
 {
-
-    m_eventToInsDictionary.insert("Test",QVector<InstructionObject*>());
-
-    InstructionObject* testObj=new InstructionObject();
-    testObj->setInsName("---Test1---");
-    m_eventToInsDictionary["Test"].append(testObj);
-
-
-
+    m_eventToInsDictionary.insert("Test_Event",QVector<InstructionObject*>());
+    InstructionObject* testObj1=new InstructionObject();
+    testObj1->setInsName("Test_Instruction1");
+    m_eventToInsDictionary["Test_Event"].append(testObj1);
+    InstructionObject* testObj2=new InstructionObject();
+    testObj2->setInsName("Test_Instruction2");
+    m_eventToInsDictionary["Test_Event"].append(testObj2);
 
 }

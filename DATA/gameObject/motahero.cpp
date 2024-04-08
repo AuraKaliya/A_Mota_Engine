@@ -9,6 +9,17 @@ MotaHero::MotaHero(QObject *parent)
 
     m_showCharacter=new ModelShowCharacter;
     m_myComponents.append(m_showCharacter);
+    m_componentDictionary.insert("ShowCharacter",m_showCharacter);
+
+
+    m_battleBase=new ModelBattleBase;
+    m_myComponents.append(m_battleBase);
+    m_componentDictionary.insert("BattleBase",m_battleBase);
+
+
+    m_motaBag=new ModelMotaBag;
+    m_myComponents.append(m_motaBag);
+    m_componentDictionary.insert("MotaBag",m_motaBag);
 
 
     if(!m_registFlag)
@@ -50,23 +61,35 @@ void MotaHero::init(const QJsonObject *data)
     setWidth(objWidth);
     setHeight(objHeight);
 
-    QString pixIdList=data->value("PixIdList").toString();
-    setPixIdList(pixIdList);
+    int sourcePipe=data->value("SourcePipe").toInt();
+    if(sourcePipe==1)
+    {
+        setPixSourceFlag(true);
+        QString pixIdList=data->value("PixSourceId").toString();
+        setPixIdList(pixIdList);
+        setPixId(pixIdList.toUInt());
+
+    }else
+    {
+        QString pixIdList=data->value("PixIdList").toString();
+        setPixIdList(pixIdList);
+
+        QString multiplePix=data->value("MultiplePix").toString();
+        setPixId(multiplePix.toUInt());
+
+
+        QString stateList=data->value("StateList").toString();
+        m_showCharacter->setStateList(stateList);
+
+        QString stateIndexList=data->value("StateIndexList").toString();
+        m_showCharacter->setPixIndexList(stateIndexList);
+    }
+
+
+
 
     QString name=data->value("Name").toString();
     setName(name);
-
-
-    QString multiplePix=data->value("MultiplePix").toString();
-    setPixId(multiplePix.toUInt());
-
-
-    QString stateList=data->value("StateList").toString();
-    QString stateIndexList=data->value("StateIndexList").toString();
-
-    m_showCharacter->setStateList(stateList);
-    m_showCharacter->setPixIndexList(stateIndexList);
-
 
     QString script=data->value("Script").toString();
     setScript(script);
@@ -78,7 +101,43 @@ void MotaHero::init(const QJsonObject *data)
         emit linkMap();
     }
 
-    qDebug()<<"mapId"<<m_linkMapId;
+    if(data->contains("Battle"))
+    {
+        QJsonObject battleVal=data->value("Battle").toObject();
+
+        unsigned int atk=battleVal.value("ATK").toInt();
+        unsigned int def=battleVal.value("DEF").toInt();
+        unsigned int hp=battleVal.value("HP").toInt();
+        bool state=battleVal.value("State").toBool();
+
+        m_battleBase->setATK(atk);
+        m_battleBase->setDEF(def);
+        m_battleBase->setHP(hp);
+        m_battleBase->setState(state);
+    }
+
+    if(data->contains("MotaBag"))
+    {
+        QJsonObject bagVal=data->value("MotaBag").toObject();
+
+        int yellow=bagVal.value("YellowKey").toInt();
+        int blue =bagVal.value("BlueKey").toInt();
+        int red =bagVal.value("RedKey").toInt();
+
+        m_motaBag->setYellowKey(yellow);
+        m_motaBag->setBlueKey(blue);
+        m_motaBag->setRedKey(red);
+    }
+
+    //qDebug()<<"mapId"<<m_linkMapId;
+    qDebug()<<"Battle~";
+    m_battleBase->tick();
+
+    qDebug()<<"bag~~";
+    m_motaBag->tick();
+
+
+    GameObject::init(data);
     qDebug()<<"----MotaHero::init----end";
 }
 
@@ -97,7 +156,30 @@ void MotaHero::solutePacketData(InsPacketData *data)
 
 QJsonObject MotaHero::getItemData()
 {
-    QJsonObject obj;
+    QJsonObject obj=GameObject::getItemData();
+
+
+    obj.insert("MultiplePix",QString::number(getPixId()));
+    obj.insert("StateList",m_showCharacter->getStateList());
+    obj.insert("StateIndexList",m_showCharacter->getPixIndexList());
+
+    QJsonObject battleObj;
+
+    battleObj.insert("ATK",(int)m_battleBase->getATK());
+    battleObj.insert("DEF",(int)m_battleBase->getDEF());
+    battleObj.insert("HP",(int)m_battleBase->getHP());
+    battleObj.insert("State",m_battleBase->getState());
+    obj.insert("Battle",battleObj);
+
+    QJsonObject bagObj;
+
+    bagObj.insert("YellowKey",m_motaBag->yellowKey());
+    bagObj.insert("BlueKey",m_motaBag->blueKey());
+    bagObj.insert("RedKey",m_motaBag->redKey());
+    obj.insert("MotaBag",bagObj);
+
+    obj.insert("LinkMapId",m_linkMapId);
+
     return obj;
 }
 
@@ -139,4 +221,44 @@ void MotaHero::changeState(GameObject *me, QVariant v)
 int MotaHero::linkMapId() const
 {
     return m_linkMapId;
+}
+
+unsigned int MotaHero::getATK()
+{
+    return m_battleBase->getATK();
+}
+
+unsigned int MotaHero::getDEF()
+{
+    return m_battleBase->getDEF();
+}
+
+unsigned int MotaHero::getHP()
+{
+    return m_battleBase->getHP();
+}
+
+bool MotaHero::getBattleState()
+{
+    return m_battleBase->getState();
+}
+
+void MotaHero::operator <<(MotaHero &obj)
+{
+    GameObject::operator <<(obj);
+
+
+    m_linkMapId=obj.m_linkMapId;
+
+
+}
+
+ModelBattleBase *MotaHero::battleBase() const
+{
+    return m_battleBase;
+}
+
+ModelMotaBag *MotaHero::motaBag() const
+{
+    return m_motaBag;
 }

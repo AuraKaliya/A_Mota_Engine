@@ -14,6 +14,11 @@ private:
     unsigned int m_allLayers;
     unsigned int m_nowLayer;
     QVector<int> m_layerLinkedList;
+    QVector<int> m_layerPreLinkList;
+
+    QMap<int,QPair<int,int> > m_layerUpPos;
+    QMap<int,QPair<int,int> > m_layerDownPos;
+
 
 public:
     explicit ModelTower(QObject *parent = nullptr);
@@ -26,7 +31,8 @@ public:
     void setNowLayer(const unsigned int& nowLayer);
     void setLinkList(const QVector<int>& layerLinkedList);
     void nextLayer();
-
+    int getNextLayer();
+    int getPreLayer();
 
     unsigned int getAllLayers() const;
     void setAllLayers(unsigned int newAllLayers);
@@ -37,6 +43,17 @@ public:
     unsigned int getNowLayer() const;
 
     void setLinked(int layer,int linkLayer);
+
+    QMap<int, QPair<int, int> > layerUpPos() const;
+    void setLayerUpPos(const QMap<int, QPair<int, int> > &newLayerUpPos);
+
+    QMap<int, QPair<int, int> > layerDownPos() const;
+    void setLayerDownPos(const QMap<int, QPair<int, int> > &newLayerDownPos);
+
+    QPair<int,int> getUpPos(int layer);
+    QPair<int,int> getDownPos(int layer);
+    QVector<int> layerPreLinkList() const;
+    void setLayerPreLinkList(const QVector<int> &newLayerPreLinkList);
 
 signals:
 

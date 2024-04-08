@@ -12,6 +12,9 @@
 class EditManager : public QObject
 {
     Q_OBJECT
+
+
+
 private:
     static EditManager* m_instance;
     GameObject* m_nowGameObject=nullptr;
@@ -22,6 +25,12 @@ private:
     static QVector<QGraphicsScene*> s_scenes;
     static int s_nowScenesIdx;
     static QGraphicsScene*s_nowScene;
+    static QVector<int> s_sceneLinkList;
+
+    static QRect s_sceneRect;
+
+    static QMap<QString,QGraphicsItem*> s_itemDictionary;
+
 
 public:
     static EditManager* getInstance(QObject *parent = nullptr);
@@ -35,6 +44,22 @@ public:
     static void loadNextScene();
     static void loadNextScene(int sceneIdx);
     static QGraphicsScene* getNowScene();
+    static void initSceneLinkList(QVector<int> list);
+
+    static QRect getSceneRect();
+    static void setSceneRect(const QRect &newSceneRect);
+
+    static QRectF getNowSceneRect();
+
+    static int getNowSceneIdx();
+    static int getScenesCount();
+
+    static void addScene();
+    static void addItemInScene(QGraphicsScene*scene,QGraphicsItem* item);
+
+    void initFromDemo();
+
+    static QVector<QGraphicsScene *> getScenes();
 
 private:
     explicit EditManager(QObject *parent = nullptr);
@@ -42,6 +67,10 @@ private:
 signals:
     void nowGameObjectChanged(GameObject*);
     void nowGameObjectItemChanged(GameObjectItem*);
+    void nowSceneChanged(int);
+    void sceneCountChanged();
+    void sceneSizeChanged();
+    void initFinished();
 };
 
 #endif // EDITMANAGER_H

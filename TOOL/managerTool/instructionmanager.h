@@ -33,7 +33,7 @@ private:
     static QMap<QString,GameDemo*>m_demoDictionary;
 
 signals:
-
+    void instructionSend(QString);
 };
 
 #endif // INSTRUCTIONMANAGER_H

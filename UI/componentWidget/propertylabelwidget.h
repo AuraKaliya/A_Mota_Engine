@@ -6,9 +6,10 @@
 #include <QLineEdit>
 #include <QMetaProperty>
 #include <DATA/baseClass/gameobject.h>
+#include <DATA/baseClass/uiwidget.h>
 #include <QVariant>
 
-class PropertyLabelWidget : public QWidget
+class PropertyLabelWidget : public UIWidget
 {
     Q_OBJECT
 
@@ -28,6 +29,8 @@ public:
     void setPair(QString title,QString value);
     void initWidget();
     void setHotUpdate(bool flag);
+    void setUIStyle()override;
+    void paintEvent(QPaintEvent* e)override;
 signals:
 
 };

@@ -15,6 +15,8 @@ class SourceManageWidget : public UIWidget
     Q_OBJECT
 public:
     explicit SourceManageWidget(QWidget *parent = nullptr);
+    void setUIStyle()override;
+    void paintEvent(QPaintEvent* e)override;
 protected:
 
 private:
@@ -23,6 +25,7 @@ private:
     AddSourceWidget* m_addSourceWidget=nullptr;
     SourceTreeWidget* m_sourceTreeWidget=nullptr;
     AddGameObjectInfoWidget* m_addGameObjectInfoWidget=nullptr;
+
 signals:
 
 };

@@ -18,9 +18,13 @@ EventEditWidget::EventEditWidget(QWidget *parent)
 
     //test
 
-    QPushButton *b1=new QPushButton("Add");
-    QPushButton *b2=new QPushButton("Del");
-    QPushButton *b3=new QPushButton("Mod");
+    DIYButton *b1=new DIYButton("SkyBlue");
+    DIYButton *b2=new DIYButton("DeepPink");
+    DIYButton *b3=new DIYButton("DarkOrchid");
+
+    b1->setPix(":/RESOURCE/default/newInstruction.png");
+    b2->setPix(":/RESOURCE/default/deleteInstruction.png");
+    b3->setPix(":/RESOURCE/default/editInstruction.png");
 
     m_showWidget->addBtnToHead(b1);
     m_showWidget->addBtnToHead(b2);
@@ -54,12 +58,21 @@ EventEditWidget::EventEditWidget(QWidget *parent)
 //    w1->show();
     //w1->setVisible(true);
     //test
-
+    setUIStyle();
 }
 
 ToolWidget *EventEditWidget::getShowWidget() const
 {
     return m_showWidget;
+}
+
+void EventEditWidget::setUIStyle()
+{
+    QString style=
+        //EngineStyle::getInstance()->firstButtonStyle()+
+                    "EventShowWidget{border-radius:10px;background-color:rgba(248,249,250,0.2);}";
+
+    setStyleSheet(style);
 }
 
 void EventEditWidget::paintEvent(QPaintEvent *e)

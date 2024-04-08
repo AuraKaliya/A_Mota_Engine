@@ -7,7 +7,8 @@
 #include "../baseClass/gameobject.h"
 #include "../baseClass/componentobject.h"
 #include "../model/modelshowcharacter.h"
-
+#include "../model/modelbattlebase.h"
+#include "../model/modelmotabag.h"
 //#include "motamap.h"
 
 #include <TOOL/template/Registor.hpp>
@@ -31,8 +32,28 @@ public:
 
     int linkMapId() const;
 
+    unsigned int getATK();
+    unsigned int getDEF();
+    unsigned int getHP();
+    bool getBattleState();
+
+    void operator <<(MotaHero& obj);
+
+    ModelBattleBase *battleBase() const;
+
+    ModelMotaBag *motaBag() const;
+
+
+
 private:
     ModelShowCharacter * m_showCharacter;
+    ModelBattleBase *m_battleBase;
+
+    ModelMotaBag * m_motaBag;
+
+
+
+
     int m_linkMapId=0;
     //MotaMap* m_linkMap=nullptr;
 signals:

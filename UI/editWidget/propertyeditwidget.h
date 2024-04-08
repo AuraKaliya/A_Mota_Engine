@@ -33,6 +33,9 @@ public:
     GameObjectItem *getNowGameObjectItem() const;
     void setNowGameObjectItem(GameObjectItem *newNowGameObjectItem);
 
+    void paintEvent(QPaintEvent* e)override;
+    void setUIStyle()override;
+    void setComponetWidgetVisible(bool flag);
 
 private:
     WheelSlideWidget* m_showWidget=nullptr;

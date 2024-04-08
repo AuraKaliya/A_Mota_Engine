@@ -11,6 +11,7 @@
 #include <DATA/baseClass/gameobject.h>
 #include <DATA/baseClass/gamedemo.h>
 #include <DATA/baseClass/gameobjectitem.h>
+#include <DATA/baseClass/pixsource.h>
 
 #include <TOOL/translateTool/valuetranslator.h>
 #include <TOOL/template/Factory.hpp>
@@ -67,6 +68,9 @@ private:
     static QMap<QString,QVector<QMetaProperty> > m_gameObjectPropertyList;
     static QMap<QString,QVector<QString>> m_gameObjectComponentList;
     static QMap<QString,QVector<QMetaProperty>> m_gameObjectComponentPropertyList;
+    static QMap<QString,QVector<QPixmap>> m_DynamicPixmapDictionary;
+    static QMap<unsigned int,PixSource*>m_pixSourceDictionary;
+    static QString m_outPortPath;
 
 public:
     static SourceManager* getInstance();
@@ -87,6 +91,8 @@ public:
     QPixmap* getPixmapById(unsigned int id);
     QPixmap* getPixmapById(unsigned int id,bool defaultPix);
     QPixmap* getPixmapByObject(GameObject*obj);
+    PixSource* getPixSourceById(unsigned int id);
+    QVector<PixSource* > getPixSourceList();
     GameObject* getObjectById(unsigned int id);
     QVector<QPair<int,QPixmap*> > getPixmapList();
     QVector<QPair<unsigned int,GameObject* > > getGameObjectList();
@@ -103,10 +109,14 @@ public:
     QVector<QVector<QPixmap* >> getMultiplePixByControlList(unsigned int,QString);
     QVector<QVector<int>> getIndexListByStr(QString indexStrList);
     GameDemo* getNowDemo();
+    void outPortDemo();
 
 protected:
     static void addPixmap(unsigned int id,QString path,QPixmap* pix);
+    static void addPixSource(unsigned int id,PixSource* pixSource);
     static bool readImage(QString path);
+    static bool readDynamicImage(QString path);
+    static bool readPixSource(QString path);
     static bool readJson(QString path);
     static bool registerSourcePathById(unsigned int id,QString path);
     static bool registerGameObjectById(unsigned int id,GameObject* gameObject);

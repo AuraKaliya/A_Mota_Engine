@@ -65,3 +65,34 @@ bool ComponentObject::waitForSignal(QObject *obj, const char *signal, const unsi
 
     return result;
 }
+
+int ComponentObject::waitForIntSignal(QObject *obj,  const char *signal, const unsigned int ms)
+{
+    m_result =0;
+    connect(obj,signal,this,SLOT(solveIntSignal(int)));
+
+    QTimer timer;
+    timer.setSingleShot(true);
+
+    connect(&timer,&QTimer::timeout,[this]{
+        m_result=-1;
+        qDebug()<<"ComponentObject::waitForSignal: TIMEOUT!";
+        m_loop.quit();
+    });
+    timer.start(ms);
+
+    m_loop.exec();
+    timer.stop();
+
+    return m_result;
+}
+
+void ComponentObject::solveIntSignal(int number)
+{
+    qDebug()<<"####ComponentObject::solveIntSignal: "<<number;
+    if(m_loop.isRunning())
+    {
+        m_result=number;
+        m_loop.quit();
+    }
+}

@@ -13,6 +13,7 @@ public:
     explicit Map2DItem(GameObject*obj,QPixmap pix,QObject *parent=nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget ) override;
     void initMap(int xScale,int yScale,QMap<int,QPixmap*> map,int defaultIdx);
+
     void setPix(int x, int y, int idx);
     void setScale(int xScale,int yScale);
     void setMapSource(QMap<int,QPixmap*> map);
@@ -20,7 +21,7 @@ public:
     void resetMap(QVector<QVector<int> > vector);
 
 private:
-    QVector<QVector<QPixmap*> > m_mapPix{};
+    QVector<QVector<QPixmap> > m_mapPix{};
     QVector<QVector<int> > m_mapIdx{};
     int m_defaultIdx=0;
     int m_xScale=5;

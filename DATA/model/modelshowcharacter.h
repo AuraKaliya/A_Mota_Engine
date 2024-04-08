@@ -22,29 +22,28 @@ class ModelShowCharacter : public ComponentObject
     Q_PROPERTY(QString stateList READ getStateList WRITE setStateList NOTIFY stateListChanged)
     Q_PROPERTY(QString pixList READ getPixList WRITE setPixList NOTIFY pixListChanged)
     Q_PROPERTY(QString nowState READ getNowState WRITE setNowState NOTIFY nowStateChanged)
-
-    Q_PROPERTY(bool pixType READ getPixType WRITE setPixType NOTIFY pixTypeChanged)
     Q_PROPERTY(QString pixIndexList READ getPixIndexList WRITE setPixIndexList NOTIFY pixIndexListChanged)
+    Q_PROPERTY(bool pixType READ getPixType WRITE setPixType NOTIFY pixTypeChanged)
 
 public:
     explicit ModelShowCharacter(QObject *parent = nullptr);
     void tick()override;
 
-    QString getStateList() const;
+    QString getStateList() ;
     void setStateList(const QString &newStateList);
 
-    bool getPixType() const;
+    bool getPixType() ;
     void setPixType(bool newPixType);
 
-    QString getPixList() const;
+    QString getPixList() ;
     void setPixList(const QString &newPixList);
 
     //QVector<QVector<QPixmap*>> getPixListFromThis();
 
-    QString getPixIndexList() const;
+    QString getPixIndexList() ;
     void setPixIndexList(const QString &newPixIndexList);
 
-    QString getNowState() const;
+    QString getNowState() ;
     bool setNowState(const QString &newNowState);
 
 signals:

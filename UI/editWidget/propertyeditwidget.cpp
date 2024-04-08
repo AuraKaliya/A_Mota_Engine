@@ -8,7 +8,7 @@ PropertyEditWidget::PropertyEditWidget(QWidget *parent)
     //setFixedSize(400,600);
     m_showWidget=new WheelSlideWidget(this);
     //
-    setStyleSheet("background-color:blue;");
+    //setStyleSheet("background-color:blue;");
     //
     m_showWidget->setGeometry(10,10,width(),height());
     m_showWidget->setWheelDirection(WheelSlideWidget::VDirection);
@@ -19,25 +19,9 @@ PropertyEditWidget::PropertyEditWidget(QWidget *parent)
     m_gameObjectPropertiewShowWidget->initWidget();
     m_gameObjectPropertiewShowWidget->setHotUpdate(true);
 
-    //可迁移到updateWidget中   ---已迁移
-//    connect(this,&PropertyEditWidget::linkObjectChanged,m_gameObjectPropertiewShowWidget,[this](GameObject* obj){
-//        m_gameObjectPropertiewShowWidget->setLinkObject(obj);
-//        m_gameObjectPropertiewShowWidget->initWidget();
-//    });
 
     m_gameObjectItemInfoWidget=new GameObjectItemInfoWidget(m_showWidget);
-
-
     m_gameObjectItemScriptWidget=new GameObjectItemScriptWidget(m_showWidget);
-
-    //
-//    m_gameObjectPropertiewShowWidget->setParent(nullptr);
-//    m_gameObjectPropertiewShowWidget->show();
-//    m_gameObjectItemInfoWidget->setParent(nullptr);
-//    m_gameObjectItemInfoWidget->show();
-
-
-    //
 
     m_showWidget->addWidgetInArea(m_gameObjectPropertiewShowWidget,0,0);
     m_showWidget->addWidgetInArea(m_gameObjectItemScriptWidget,0,spacing+m_gameObjectPropertiewShowWidget->height());
@@ -58,7 +42,10 @@ PropertyEditWidget::PropertyEditWidget(QWidget *parent)
         m_updateFlagItem=true;
         updateWidget();
     });
-    m_gameObjectPropertiewShowWidget->show();
+    //m_gameObjectPropertiewShowWidget->show();
+
+    setComponetWidgetVisible(false);
+
 }
 
 void PropertyEditWidget::updateWidget()
@@ -69,39 +56,22 @@ void PropertyEditWidget::updateWidget()
         qDebug()<<"updateWidget";
         m_gameObjectItemScriptWidget->linkItem(m_nowGameObjectItem);
 
-m_gameObjectPropertiewShowWidget->setLinkObject(m_nowGameObject);
-m_gameObjectPropertiewShowWidget->initWidget();
-//        //m_gameObjectPropertiewShowWidget->setVisible(true);
+        m_gameObjectPropertiewShowWidget->setLinkObject(m_nowGameObject);
+        m_gameObjectPropertiewShowWidget->initWidget();
 
-//        qDebug()<<"m_gameObjectPropertiewShowWidget:"<<m_gameObjectPropertiewShowWidget->getlinkObject()<<
-//            m_gameObjectPropertiewShowWidget->getlinkObject()->getName()<<"****\n" <<
-//            m_gameObjectPropertiewShowWidget->geometry()<<
-//            m_gameObjectPropertiewShowWidget->isVisible();
-
-//        //qDebug()<<this->children()[0]->children()[0]->children()[0]->children();
-
-//        qDebug()<<"------";
-//        auto it2=static_cast<QWidget*>(this->children()[0]->children()[0]->children()[0]);
-//        //qDebug()<<it2->isVisible()<<it2->geometry();
-//        //qDebug()<<"------";
-
-//        for(auto it:this->children()[0]->children()[0]->children())
-//        {
-//            qDebug()<<it->objectName();
-//            //qDebug()<<static_cast<QWidget*>(it)->isVisible()<<static_cast<QWidget*>(it)->geometry();
-
-//        }
 
         m_gameObjectItemInfoWidget->setLinkItem(m_nowGameObjectItem);
         m_gameObjectItemInfoWidget->initWidget();
 
+
+        setComponetWidgetVisible(true);
 
         m_updateFlagObj=false;
         m_updateFlagItem=false;
 
         m_showWidget->updateArea();
 
-   }
+    }
 
 }
 
@@ -134,4 +104,30 @@ GameObjectItem *PropertyEditWidget::getNowGameObjectItem() const
 void PropertyEditWidget::setNowGameObjectItem(GameObjectItem *newNowGameObjectItem)
 {
     m_nowGameObjectItem = newNowGameObjectItem;
+}
+
+void PropertyEditWidget::paintEvent(QPaintEvent *e)
+{
+
+    QPainter painter(this);
+    QImage  img(":/RESOURCE/default/Background1.png");
+
+    painter.drawImage(this->rect(),img);
+}
+
+void PropertyEditWidget::setUIStyle()
+{
+    QString style=
+        "QLabel{}";
+
+    setStyleSheet(style);
+
+}
+
+void PropertyEditWidget::setComponetWidgetVisible(bool flag)
+{
+    if(m_showWidget!=nullptr) m_showWidget->setVisible(flag);
+    if(m_gameObjectPropertiewShowWidget!=nullptr) m_gameObjectPropertiewShowWidget->setVisible(flag);
+    if(m_gameObjectItemInfoWidget!=nullptr)m_gameObjectItemInfoWidget->setVisible(flag);
+    if(m_gameObjectItemScriptWidget!=nullptr)m_gameObjectItemScriptWidget->setVisible(flag);
 }

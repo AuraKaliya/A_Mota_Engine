@@ -19,9 +19,20 @@ QMap<QString, SoluteFunc>* GameObject::getSoluteStratagies()
 }
 
 GameObject::GameObject(QObject *parent)
-    : QObject{parent},m_id(0),m_loadProperty(false),m_animationState(false),m_script(""),m_objectStateList("Deal,Normal"),m_pixIdList(""),m_pixId(-1),m_posX(0.0),m_posY(0.0),m_width(50),m_height(50),m_visible(true),m_superEdit(false)
+    : QObject{parent},m_pixSourceFlag(false),m_id(0),m_loadProperty(false),m_animationState(false),m_script(""),m_objectStateList("Deal,Normal"),m_pixIdList(""),m_pixId(-1),m_posX(0.0),m_posY(0.0),m_width(50),m_height(50),m_visible(true),m_superEdit(false)
 {
 
+}
+
+ComponentObject *GameObject::getComponent(QString name)
+{
+    ComponentObject* res=nullptr;
+    auto it=m_componentDictionary.find(name);
+    if(it!=m_componentDictionary.end())
+    {
+        res=it.value();
+    }
+    return res;
 }
 
 void GameObject::operator <<(GameObject &obj)
@@ -44,6 +55,8 @@ void GameObject::operator <<(GameObject &obj)
     setPixIdList(obj.getPixIdList());
     setPosInit(obj.getPosInit());
     setScript(obj.getScript());
+    setItemId(obj.itemId());
+    setPixSourceFlag(obj.pixSourceFlag());
 
 //    if(obj.m_linkGameObject!=nullptr)
 //    {
@@ -79,6 +92,7 @@ void GameObject::operator <<(GameObject &obj)
         it=nullptr;
     }
     m_myComponents.clear();
+
     for(auto it:obj.getMyComponents())
     {
         ComponentObject * componet=Factory<ComponentObject>::GetInstance()->CreateObject(it->objectName()) ;
@@ -103,12 +117,6 @@ void GameObject::operator <<(GameObject &obj)
         }
         m_myComponents.append(componet);
     }
-
-
-
-
-
-
 
     return;
 }
@@ -167,7 +175,7 @@ void GameObject::setType(Type newType)
 
 void GameObject::init(const QJsonObject *data)
 {
-
+    emit initialized();
 }
 
 void GameObject::tick()
@@ -193,7 +201,25 @@ void GameObject::solutePacketData(InsPacketData *data)
 
 QJsonObject GameObject::getItemData()
 {
-    return QJsonObject();
+    QJsonObject obj;
+    obj.insert("Type",getType());
+    obj.insert("Id",(int)getId());
+    obj.insert("ClassName",getClassName());
+    obj.insert("Name",getName());
+
+    QJsonArray posArray;
+    posArray.append(getPosX());
+    posArray.append(getPosY());
+    obj.insert("Pos",posArray);
+
+    QJsonArray sizeArray;
+    sizeArray.append(getWidth());
+    sizeArray.append(getHeight());
+    obj.insert("Size",sizeArray);
+
+    obj.insert("PixIdList",getPixIdList());
+    obj.insert("Script",getScript());
+    return obj;
 }
 
 
@@ -339,9 +365,18 @@ QString GameObject::getPixIdList() const
 
 void GameObject::setPixIdList(const QString &newPixIdList)
 {
+    if(newPixIdList=="")
+        return;
+
     if (m_pixIdList == newPixIdList)
         return;
     m_pixIdList = newPixIdList;
+
+    if(m_pixIdList.split(",")[0].toInt()!=0)
+    {
+        setPixId(m_pixIdList.split(",")[0].toInt());
+    }
+
     emit pixIdListChanged();
 }
 
@@ -408,4 +443,43 @@ void GameObject::setAnimationState(bool newAnimationState)
         return;
     m_animationState = newAnimationState;
     emit animationStateChanged();
+}
+
+bool GameObject::drawState() const
+{
+    return m_drawState;
+}
+
+void GameObject::setDrawState(bool newDrawState)
+{
+    if (m_drawState == newDrawState)
+        return;
+    m_drawState = newDrawState;
+    emit drawStateChanged(m_drawState);
+}
+
+int GameObject::itemId() const
+{
+    return m_itemId;
+}
+
+void GameObject::setItemId(int newItemId)
+{
+    if (m_itemId == newItemId)
+        return;
+    m_itemId = newItemId;
+    emit itemIdChanged();
+}
+
+bool GameObject::pixSourceFlag() const
+{
+    return m_pixSourceFlag;
+}
+
+void GameObject::setPixSourceFlag(bool newPixSourceFlag)
+{
+    if (m_pixSourceFlag == newPixSourceFlag)
+        return;
+    m_pixSourceFlag = newPixSourceFlag;
+    emit pixSourceFlagChanged();
 }

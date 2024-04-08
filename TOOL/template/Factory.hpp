@@ -81,8 +81,6 @@ template<class T>
 Factory<T>* Factory<T>::m_instance=nullptr;
 
 
-
-
 template <typename T,typename Base>
 std::function<Base*(QObject*)> createFactoryCreator()
 {

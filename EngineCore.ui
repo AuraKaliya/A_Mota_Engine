@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1826</width>
-    <height>1034</height>
+    <width>2171</width>
+    <height>2091</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="testBtn">
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>90</y>
+     <x>760</x>
+     <y>1020</y>
      <width>201</width>
      <height>51</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>160</y>
+     <x>990</x>
+     <y>1020</y>
      <width>201</width>
      <height>51</height>
     </rect>
@@ -42,14 +42,27 @@
   <widget class="QPushButton" name="insButton">
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>230</y>
+     <x>1210</x>
+     <y>1020</y>
      <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
     <string>testToInstruction()</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>1020</y>
+     <width>201</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PluginTest</string>
    </property>
   </widget>
  </widget>

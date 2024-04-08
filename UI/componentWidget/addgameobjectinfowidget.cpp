@@ -26,17 +26,35 @@ void AddGameObjectInfoWidget::updateList()
     initGameObjectClassBoxList();
 }
 
+void AddGameObjectInfoWidget::setUIStyle()
+{
+    QString style=
+        "QWidget{background-color:rgba(248,249,250,0.7);}"
+        "GameObjectPropertiesShowWidget{background-color:rgba(248,249,250,0.2);}"
+        "QTextEdit{border-radius:10px;background-color:rgba(248,249,250,0.2);}"
+        ;
+    setStyleSheet(style);
+    m_nodesWidget->setStyleSheet("QWidget{border-radius:10px;background-color:rgba(248,249,250,0.7);}");
+
+
+    m_yesBtn->setStyleSheet(EngineStyle::getInstance()->firstButtonStyle());
+    m_noBtn->setStyleSheet(EngineStyle::getInstance()->firstButtonStyle());
+
+}
+
 AddGameObjectInfoWidget::AddGameObjectInfoWidget(QWidget *parent)
-    : QWidget{parent}
+    : UIWidget{parent}
 {
     resize(400,800);
+    setWindowTitle("AddGameObject");
+
 
     initPixLabel();
     initNodesWidget();
     initPropertyWidget();
     initControBtn();
     initLayouts();
-
+    setUIStyle();
       //qDebug()<<"new";
 }
 
@@ -69,13 +87,18 @@ void AddGameObjectInfoWidget::initNodesWidget()
 
     m_firstNodeLabel->setFixedSize(200,40);
     m_firstNodeLabel->setText("GameObject");
-
-
+    m_firstNodeLabel->setFont(EngineStyle::getInstance()->thirdTitleFont());
+    m_firstNodeLabel->setAlignment(Qt::AlignCenter);
+    // 单独设置样式----透明背景
+    m_firstNodeLabel->setStyleSheet("background-color:rgba(255,255,255,0);");
 
     m_secondNodeLabel->setFixedSize(200,40);
+    //给下拉框设置样式
+    m_secondNodeLabel->setStyleSheet(EngineStyle::getInstance()->firstComboBoxStyle());
     initSecondNodeLabelList();
 
     m_GameObjectClassBox->setFixedSize(200,40);
+    m_GameObjectClassBox->setStyleSheet(EngineStyle::getInstance()->firstComboBoxStyle());
     initGameObjectClassBoxList();
 
 
@@ -94,11 +117,12 @@ void AddGameObjectInfoWidget::initPropertyWidget()
     // 设置m_informationBox的其他属性，如文本、字体、对齐方式等
 
     m_propertyWidget->setFixedSize(400,300);
-    m_propertyWidget->setStyleSheet("background-color:white;");
+    //m_propertyWidget->setStyleSheet("background-color:white;");
     m_propertyWidget->initWidget();
 
     m_informationBox->setFixedSize(400,250);
-
+    m_informationBox->setFont(EngineStyle::getInstance()->firstTextFont());
+    m_informationBox->setPlaceholderText("Information");
 
     connect(this,&AddGameObjectInfoWidget::linkObjectChanged,m_propertyWidget,[this](GameObject* obj){
         m_propertyWidget->setLinkObject(obj);
@@ -145,9 +169,13 @@ void AddGameObjectInfoWidget::initControBtn()
     m_yesBtn=new QPushButton(tr("确定"),this);
     m_noBtn=new QPushButton(tr("取消"),this);
 
+
+
+    m_yesBtn->setMinimumSize(80,50);
     m_yesBtn->adjustSize();
     m_yesBtn->setVisible(true);
 
+    m_noBtn->setMinimumSize(80,50);
     m_noBtn->adjustSize();
     m_noBtn->setVisible(true);
 
@@ -195,8 +223,10 @@ void AddGameObjectInfoWidget::initSecondNodeLabelList()
 
 void AddGameObjectInfoWidget::initGameObjectClassBoxList()
 {
-    //qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() start";
+    qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() start";
     QVector<QPair<QString,GameObject*>> list=SourceSystem::getInstance()->getManager()->getGameObjectSampleList();
+
+    qDebug()<<list;
 
     //m_GameObjectClassBox在clear时会变动currentIndex
     m_linkObjectList.clear();
@@ -214,5 +244,5 @@ void AddGameObjectInfoWidget::initGameObjectClassBoxList()
     {
         m_GameObjectClassBox->setCurrentIndex(0);
     }
-    //qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() end";
+    qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() end";
 }

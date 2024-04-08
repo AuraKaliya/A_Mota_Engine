@@ -14,7 +14,7 @@ void ModelShowCharacter::tick()
      qDebug()<<"nowState"<<m_nowState;
 }
 
-QString ModelShowCharacter::getStateList() const
+QString ModelShowCharacter::getStateList()
 {
     return m_stateList;
 }
@@ -27,7 +27,7 @@ void ModelShowCharacter::setStateList(const QString &newStateList)
     emit stateListChanged();
 }
 
-bool ModelShowCharacter::getPixType() const
+bool ModelShowCharacter::getPixType()
 {
     return m_pixType;
 }
@@ -40,7 +40,7 @@ void ModelShowCharacter::setPixType(bool newPixType)
     emit pixTypeChanged();
 }
 
-QString ModelShowCharacter::getPixList() const
+QString ModelShowCharacter::getPixList()
 {
     return m_pixList;
 }
@@ -53,8 +53,10 @@ void ModelShowCharacter::setPixList(const QString &newPixList)
     emit pixListChanged();
 }
 
-QString ModelShowCharacter::getPixIndexList() const
+QString ModelShowCharacter::getPixIndexList()
 {
+    qDebug()<<"ModelShowCharacter::getPixIndexList()```";
+    //qDebug()<<"check"<<m_pixIndexList;
     return m_pixIndexList;
 }
 
@@ -66,7 +68,7 @@ void ModelShowCharacter::setPixIndexList(const QString &newPixIndexList)
     emit pixIndexListChanged();
 }
 
-QString ModelShowCharacter::getNowState() const
+QString ModelShowCharacter::getNowState()
 {
     return m_nowState;
 }

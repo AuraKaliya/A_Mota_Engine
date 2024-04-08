@@ -7,6 +7,7 @@
 #include "../baseClass/gameobject.h"
 #include "../baseClass/componentobject.h"
 #include "../model/modelshowcharacter.h"
+#include "../model/modelbattlebase.h"
 
 /*
     怪物GO
@@ -36,8 +37,16 @@ public:
     int linkMapId() const;
 
     QJsonObject getItemData()override;
+
+    unsigned int getATK();
+    unsigned int getDEF();
+    unsigned int getHP();
+    bool getBattleState();
+
+
 private:
     ModelShowCharacter * m_showCharacter;
+    ModelBattleBase * m_battleBase;
     int m_linkMapId=0;
 
 signals:

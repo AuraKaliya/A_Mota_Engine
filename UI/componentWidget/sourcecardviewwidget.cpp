@@ -192,10 +192,7 @@ void SourceCardViewWidget::dropEvent(QDropEvent *e)
     const QMimeData* data=e->mimeData();
     if(data->hasFormat("Count"))
     {
-        //qDebug()<<"m_cardType"<<(int)m_cardType;
-        //qDebug()<<"ViewClass"<<data->data("ViewClass").toInt();
         int count=data->data("Count").toInt();
-
         if(data->hasFormat("ViewClass"))
         if(data->data("ViewClass").toInt()!=(int)m_cardType)
         {
@@ -260,12 +257,9 @@ void SourceCardViewWidget::mousePressEvent(QMouseEvent *e)
     if(e->button()==Qt::LeftButton)
     {
         emit nowFocusWidget(this);
-        //qDebug()<<m_selectState;
-        //qDebug()<<m_selectRect<<" "<<e->pos()<<m_selectRect.contains(e->pos());
-        //qDebug()<<m_selectWidgetList.empty();
+
         if(m_selectState!=NoSelect&&m_selectRect.contains(e->pos())&&!m_selectWidgetList.empty())
         {
-           // qDebug()<<"hahaha";
             //已选中，且鼠标在选中框内开始拖拽
             m_dragState=true;
             QDrag *drag=new QDrag(this);
@@ -283,9 +277,7 @@ void SourceCardViewWidget::mousePressEvent(QMouseEvent *e)
                 {
                     data->setData("Gid_"+IdxStr,QByteArray::number(metaData->Gid));
                     data->setData("Name_"+IdxStr,metaData->Name.toLocal8Bit());
-//                    data->setData("Information_"+IdxStr,metaData->Information.toLocal8Bit());
                     data->setData("Class_"+IdxStr,metaData->Class.toLocal8Bit());
-//                    data->setData("Error_"+IdxStr,QByteArray::number(0));
                 }
                 else
                 {
@@ -343,10 +335,8 @@ void SourceCardViewWidget::mouseReleaseEvent(QMouseEvent *e)
     m_mousePressedState=false;
     //鼠标停下时，将区域内的CardWidget加入选择队列中。
     QRect posRect(e->pos().x(),e->pos().y(),1,1);
-
     if(this->rect().contains(posRect)||m_selectState)
     {
-        //resetSelectedState();
         //有一个更优的算法：预测GridLayout的逻辑，直接通过Rect将对应的widget加入容器中  ---GridLayout可变排列
         //这里采用暴力选取，因为没多少个（大概
         for(int i=0;i<m_cardWidgetList.size();++i)
@@ -358,7 +348,6 @@ void SourceCardViewWidget::mouseReleaseEvent(QMouseEvent *e)
                 int j=i;
                 while(j<m_cardWidgetList.size())
                 {
-
                     if(m_selectRect.contains(m_cardWidgetList[j]->geometry()))
                     {
                         m_cardWidgetList[j]->setSelected(true);
@@ -376,7 +365,6 @@ void SourceCardViewWidget::mouseReleaseEvent(QMouseEvent *e)
                     m_selectState=NoSelect;
                     m_cardWidgetList[i]->setSelected(false);
                     resetSelectedState();
-
                 }else
                 {
                     resetSelectedState();
@@ -384,54 +372,12 @@ void SourceCardViewWidget::mouseReleaseEvent(QMouseEvent *e)
                     m_cardWidgetList[i]->setSelected(true);
                     m_selectWidgetList.append(m_cardWidgetList[i]);
                 }
-
                 break;
             }else
             {
                 resetSelectedState();
             }
         }
-
-#if 0
-        for(auto it:m_cardWidgetList)
-        {
-            if(m_selectRect.contains(it->geometry()))
-            {
-                qDebug()<<"1hao";
-                it->setSelected(true);
-                m_selectWidgetList.append(it);
-            }else if(it->geometry().contains(m_selectRect))
-            {
-
-                if(it->getSelected())
-                {
-                    qDebug()<<"yixuanzhong ---";
-                    m_selectState=NoSelect;
-                    it->setSelected(false);
-                    resetSelectedState();
-                }else
-                {
-                    resetSelectedState();
-                    qDebug()<<"meixuanzhong ---";
-                    m_selectState=SingleSelect;
-                    it->setSelected(true);
-                    m_selectWidgetList.append(it);
-                }
-
-                break;
-            }
-            else
-            {
-                qDebug()<<"3hao";
-            }
-
-        }
-        if(m_selectWidgetList.empty())
-        {
-            m_selectState=NoSelect;
-        }
-#endif
-
     }
     updateSelectRect();
     update();

@@ -16,7 +16,7 @@
 
 
 //test
-
+#include <UI/editWidget/testwidget.h>
 //test
 
 
@@ -26,6 +26,10 @@ EngineCore::EngineCore(QWidget *parent)
 {
     ui->setupUi(this);
     setFixedSize(1920,1080);
+    move(0,0);
+    setStyleSheet("EngineCore{background-color:white;}"
+                 );
+    // "SourceManageWidget{background-color:black;}"
 
 //构建全局变量
 
@@ -68,6 +72,7 @@ EngineCore::EngineCore(QWidget *parent)
     stateToUISystem->connectToSystem(m_uiSystem);
     stateToUISystem->connectToStartingBySignal(m_stateManager,SIGNAL(startAllSystem()));
 
+    //==================================后启动
     //构建脚本系统
     m_scriptSystem=ScriptSystem::getInstance(this);
     //绑定状态--注册进状态机
@@ -75,7 +80,12 @@ EngineCore::EngineCore(QWidget *parent)
     stateToScriptSystem->connectToSystem(m_scriptSystem);
     stateToScriptSystem->connectToStartingBySignal(m_stateManager,SIGNAL(startAllSystem()));
 
-
+    //构建插件系统
+    m_pluginSystem=PluginSystem::getInstance(this);
+    //绑定状态--注册进状态机
+    SystemState* stateToPluginSystem=new SystemState(engineStartState);
+    stateToPluginSystem->connectToSystem(m_pluginSystem);
+    stateToPluginSystem->connectToStartingBySignal(m_stateManager,SIGNAL(startAllSystem()));
 
 
 
@@ -89,7 +99,7 @@ EngineCore::EngineCore(QWidget *parent)
         qDebug()<<"Timer timeOut";
         startTimer->stop();
         startTimer->deleteLater();
-        test();
+        startSystem();
     });
 
     m_stateManager->start();
@@ -133,7 +143,7 @@ EngineCore::~EngineCore()
 
 void EngineCore::test()
 {
-    m_stateManager->startSystem();
+
 
 //    QTimer *startTimer=new QTimer;
 //    startTimer->setInterval(20);
@@ -147,6 +157,11 @@ void EngineCore::test()
 //    });
 //    startTimer->start();
 
+}
+
+void EngineCore::startSystem()
+{
+    m_stateManager->startSystem();
 }
 
 bool EngineCore::eventFilter(QObject *obj, QEvent *e)
@@ -167,6 +182,8 @@ bool EngineCore::eventFilter(QObject *obj, QEvent *e)
 void EngineCore::keyPressEvent(QKeyEvent *e)
 {
     qDebug()<<e->key() << "Key Pressed";
+    char keyChar=e->key();
+    emit actionSend(QString(keyChar)+" Pressed.");
     //qDebug()<<Qt::Key_Up;
     GlobalKeyValue keyValue;
     //目前支持定义0-9：48~57  a-z:65~90
@@ -237,7 +254,7 @@ void EngineCore::on_testBtn_clicked()
 #endif
 
     QString path="D:/QTF/A_Mota_Engine/RESOURCE/demoSetting/MotaTest1.json";
-    m_sourceSystem->getManager()->importSource(path);
+    //m_sourceSystem->getManager()->importSource(path);
 
     path="D:/QTF/A_Mota_Engine/RESOURCE/setting/defaultSource.json";
     m_sourceSystem->getManager()->importSource(path);
@@ -264,18 +281,44 @@ void EngineCore::on_testBtn_clicked()
     qDebug()<<"Test--------------遍历文件----------------end";
 #endif
 
+
+    //m_editSystem->getManager()->initFromDemo();
 }
 
 
 void EngineCore::on_pushButton_clicked()
 {
     qDebug()<<"on_pushButton_clicked";
-    for(auto it:m_sourceSystem->getManager()->getNowDemo()->getElement())
-    {
-        it->tick();
-        //AddGameObjectInfoWidget* w=new AddGameObjectInfoWidget(it);
-        //w->show();
-    }
+//    for(auto it:m_sourceSystem->getManager()->getNowDemo()->getElement())
+//    {
+//        it->tick();
+//        //AddGameObjectInfoWidget* w=new AddGameObjectInfoWidget(it);
+//        //w->show();
+//    }
+
+    //m_editSystem->getManager()->loadNextScene();
+
+    TestWidget* w=new TestWidget();
+    setFixedSize(0,0);
+    setParent(w);
+    setVisible(true);
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
+    w->init();
+    w->show();
+    //w->setFocus();
+    connect(w,&TestWidget::closed,this,[this](){
+        this->setParent(nullptr);
+        this->show();
+        setFixedSize(1920,1080);
+        setVisible(true);
+        move(0,0);
+                                         });
+    //this->hide();
+
+
+
+
     qDebug()<<"on_pushButton_clicked end";
 }
 
@@ -312,8 +355,25 @@ void EngineCore::on_insButton_clicked()
 //    m_instructionSyStem->getInstance()->getManager()->soluteInstruction(insObj);
 
 
-    qDebug()<<m_sourceSystem->getManager()->getGameObjectSampleList()[0].first;
-    qDebug()<<* m_sourceSystem->getManager()->getComponentByGameObjectName(m_sourceSystem->getManager()->getGameObjectSampleList()[0].first);
+   // qDebug()<<m_sourceSystem->getManager()->getGameObjectSampleList()[0].first;
+    //qDebug()<<* m_sourceSystem->getManager()->getComponentByGameObjectName(m_sourceSystem->getManager()->getGameObjectSampleList()[0].first);
+   m_editSystem->getManager()->initFromDemo();
 
+   //检查pixSource
+
+//   for(auto it:m_sourceSystem->getManager()->getPixSourceList())
+//   {
+//        qDebug()<<it->pix()<<it->id()<<it->pix()->isNull()<<it->stateIndexList()<<it->stateList();
+//   }
+
+
+}
+
+
+void EngineCore::on_pushButton_2_clicked()
+{
+   qDebug()<<"==================load Plugin==============";
+   m_pluginSystem->getInstance()->getManager()->loadPlugins();
+    qDebug()<<"==================load Plugin==============end";
 }
 

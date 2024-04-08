@@ -15,7 +15,7 @@
 #include <TOOL/editTool/editsystem.h>
 #include <TOOL/uiTool/uisystem.h>
 #include <TOOL/scriptTool/scriptsystem.h>
-
+#include <TOOL/pluginTool/pluginsystem.h>
 #include "TOOL/managerTool/statemanger.h"
 
 #include <DATA/constvalue.h>
@@ -35,6 +35,7 @@ public:
     ~EngineCore();
 
     void test();
+    void startSystem();
 protected:
 
     bool eventFilter(QObject* obj, QEvent*e)override;
@@ -55,16 +56,18 @@ private:
     EditSystem* m_editSystem=nullptr;
     UISystem* m_uiSystem=nullptr;
     ScriptSystem* m_scriptSystem=nullptr;
-
+    PluginSystem* m_pluginSystem=nullptr;
 
 
     //**test****//
     int testx=0;
+
     //**test****//
+
 
 signals:
     void closeEngine();
-
+    void actionSend(QString str);
 private slots:
 
     //**test****//
@@ -72,5 +75,6 @@ private slots:
     void on_pushButton_clicked();
     void on_insButton_clicked();
     //**test****//
+    void on_pushButton_2_clicked();
 };
 #endif // ENGINECORE_H

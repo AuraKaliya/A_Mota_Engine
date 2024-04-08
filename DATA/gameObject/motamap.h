@@ -63,6 +63,8 @@ memset
 class MotaMap : public GameObject
 {
     Q_OBJECT
+    Q_PROPERTY(int mapNetWidth READ mapNetWidth WRITE setMapNetWidth NOTIFY mapNetWidthChanged)
+    Q_PROPERTY(int mapNetHeight READ mapNetHeight WRITE setMapNetHeight NOTIFY mapNetHeightChanged)
 public:
     explicit MotaMap(QObject *parent = nullptr);
     void init(const QJsonObject * data)override;
@@ -73,24 +75,72 @@ public:
     int getNowLayer();
     QVector<QVector<int> > getMap(int layer);
     QVector<QVector<bool> > getValiedMap(int layer);
+    QVector<int> getTowerLink();
+    void nextLayer();
+    int getNextLayer();
+    int getPreLayer();
+    void nextLayer(int layer);
     bool elementIsValied(int layer,int x,int y);
     QJsonObject getItemData()override;
     static void changeElement(GameObject* me,QVariant v);
 
-    void  operator <<(GameObject& obj)override;
+    void  operator <<(GameObject& obj);
     QPoint getElementPoint(int layer,int x,int y);
+
+    QPair<int,int> getMapInterval(int layer);
 
     QPair<int,QPair<int,int>> getHeroPos();
     QPair<int,QPair<int,int>> findObjectPos(int id);
     void objectMove(int layer,int oldX,int oldY,int newX,int newY);
+
+    void setItemPos(int layer,int x, int y, int itemId);
+
+
+
+
+
+
+
+    QPair<int,int> getUpPos();
+    QPair<int,int> getDownPos();
+
+    QPair<int,int> getUpPos(int layer);
+    QPair<int,int> getDownPos(int layer);
+    void heroMoveToNextLayer(int layer,int x,int y);
+
+    void heroChanged(int newId);
+    void addObject(int layer,int x,int y,int index);
+    void delObject(int index);
+
+    QVector<Model2DObjectMap *> objectMap() const;
+    Model2DObjectMap* getObjectMapByLayer(int layer);
+    //创建-设置相关
+    /*
+        1. 设置加载图片 设置默认填充 设置地图大小
+        2.
+    */
+
+
+    int mapNetWidth() const;
+    void setMapNetWidth(int newMapNetWidth);
+
+    int mapNetHeight() const;
+    void setMapNetHeight(int newMapNetHeight);
 
 private:
     QVector<Model2DMap*> m_map;
     QVector<Model2DObjectMap*> m_objectMap;
     ModelTower* m_tower;
     QMap<int,int>m_tilePixDictionary;
-signals:
+    int m_mapNetWidth;
+    int m_mapNetHeight;
 
+signals:
+    void linkDemo();
+    void objectDeleted(int);
+    void objectMoved(int id,int x,int y);
+    void mapNetWidthChanged();
+    void mapNetHeightChanged();
 };
 REGISTER_OBJECT(MotaMap,GameObject)
 #endif // MOTAMAP_H

@@ -11,6 +11,16 @@
         <file>RESOURCE/default/MotaPix/Hero1.png</file>
         <file>RESOURCE/setting/monsterTest1.lua</file>
         <file>RESOURCE/setting/monsterTest2.lua</file>
+        <file>RESOURCE/default/Background1.png</file>
+        <file>RESOURCE/default/Background2.png</file>
+        <file>RESOURCE/default/image_icon.png</file>
+        <file>RESOURCE/default/gameObject_icon.png</file>
+        <file>RESOURCE/default/Background3.png</file>
+        <file>RESOURCE/default/arrow1.png</file>
+        <file>RESOURCE/default/arrow2.png</file>
+        <file>RESOURCE/default/newInstruction.png</file>
+        <file>RESOURCE/default/deleteInstruction.png</file>
+        <file>RESOURCE/default/editInstruction.png</file>
     </qresource>
     <qresource prefix="/shaders">
         <file>RESOURCE/setting/shapes.frag</file>

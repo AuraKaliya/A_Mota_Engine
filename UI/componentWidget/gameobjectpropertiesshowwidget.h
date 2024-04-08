@@ -12,6 +12,8 @@
 #include <UI/componentWidget/propertylabelwidget.h>
 #include <UI/componentWidget/statelabel.h>
 #include <TOOL/sourceTool/sourcesystem.h>
+#include <DATA/enginestyle.h>
+
 class GameObjectPropertiesShowWidget : public QWidget
 {
     Q_OBJECT

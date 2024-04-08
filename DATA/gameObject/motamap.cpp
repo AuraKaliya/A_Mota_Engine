@@ -78,6 +78,11 @@ void MotaMap::init(const QJsonObject *data)
     setPixIdList(pixIdList);
     setName(name);
 
+    setMapNetWidth(mapWidth);
+    setMapNetHeight(mapHeight);
+
+
+
     QVector<QVector<QVector <int> > > motaMap(mapLayer,QVector<QVector <int> >(mapHeight,QVector <int> (mapWidth,0)));
 
     QJsonArray motaLayerMapData=data->value("MapMatrix").toArray();
@@ -122,12 +127,14 @@ void MotaMap::init(const QJsonObject *data)
     qDebug()<<motaValiedMap;
 
     QVector<int> maplinkedList(mapLayer,0);
+    QVector<int> mapPrelinkedList(mapLayer,0);
     if(!data->value("MapLayerLinkedList").isNull())
     {
         QJsonArray mapLinkedListData=data->value("MapLayerLinkedList").toArray();
         for(int i=0;i<mapLayer;++i)
         {
             maplinkedList[i]=mapLinkedListData[i].toInt();
+            mapPrelinkedList[mapLinkedListData[i].toInt()]=i;
         }
     }
 
@@ -151,16 +158,64 @@ void MotaMap::init(const QJsonObject *data)
 
     int heroId=data->value("HeroId").toInt();
 
-
-
-
     //建立地图
 
     m_tower->setAllLayers(mapLayer);
     if(!data->value("MapLayerLinkedList").isNull())
     {
         m_tower->setLayerLinkedList(maplinkedList);
+        m_tower->setLayerPreLinkList(mapPrelinkedList);
     }
+
+    int index=0;
+    QMap<int,QPair<int,int> > upPos;
+    for(auto it :data->value("UpPos").toArray())
+    {
+        if(it.isArray())
+        {
+            upPos.insert(index,QPair<int,int>(it.toArray()[0].toInt(),it.toArray()[1].toInt()));
+        }
+        else if(it.isBool())
+        {
+            //false --赋值-1
+            upPos.insert(index,QPair<int,int>(-1,-1));
+        }
+        else
+        {
+            //报错
+            qDebug()<<"error! upPos read falied!" << index;
+        }
+        index++;
+    }
+    m_tower->setLayerUpPos(upPos);
+    qDebug()<<"Check tower upPos:"<<upPos;
+
+
+
+    index=0;
+    QMap<int,QPair<int,int> > downPos;
+    for(auto it :data->value("DownPos").toArray())
+    {
+        if(it.isArray())
+        {
+            downPos.insert(index,QPair<int,int>(it.toArray()[0].toInt(),it.toArray()[1].toInt()));
+        }
+        else if(it.isBool())
+        {
+            //false --跳过
+            downPos.insert(index,QPair<int,int>(-1,-1));
+        }
+        else
+        {
+            //报错
+            qDebug()<<"error! upPos read falied!" << index;
+        }
+        index++;
+    }
+    m_tower->setLayerDownPos(downPos);
+    qDebug()<<"Check tower downPos:"<<downPos;
+
+
 
 
     for(int i=0;i<mapLayer;++i)
@@ -171,12 +226,12 @@ void MotaMap::init(const QJsonObject *data)
         qDebug()<<"--check0--"<<motaValiedMap[i];
         tmpMap->initMap(mapWidth,mapHeight,objWidth,objHeight,motaMap[i],motaValiedMap[i]);
 
-//        connect(tmpObjectMap,&Model2DObjectMap::hasHeroChanged,this,[this](bool flag){
-//            if(flag)
-//            {
+        connect(tmpObjectMap,&Model2DObjectMap::hasHeroChanged,this,[this](bool flag){
+            if(flag)
+            {
 
-//            }
-//        });
+            }
+        });
         tmpObjectMap->initMap(mapWidth,mapHeight,motaObjectMap[i]);
         tmpObjectMap->initHero(heroId);
 
@@ -185,6 +240,30 @@ void MotaMap::init(const QJsonObject *data)
         qDebug()<<"m_objectMap"<<motaObjectMap;
 
     }
+
+    //connect
+    // 优化--在demo初始化后从demo处统一获取指针进行connect
+
+    for(auto it:m_objectMap)
+    {
+
+
+        connect(it,&Model2DObjectMap::objectOverlaped,this,[this](Model2DObjectMap* map,int index1,int x1,int y1,int index2,int x2,int y2){
+            //map无权在此处理，需要进行转发信号。
+            // 优化--在demo初始化后从demo处对该信号进行管理
+        });
+
+
+
+    }
+
+
+
+
+
+
+
+
 
     qDebug()<<"--check--:";
     for(auto it:this->getMyComponents())
@@ -208,7 +287,10 @@ void MotaMap::init(const QJsonObject *data)
 
         }
 
+
+
     qDebug()<<"check:"<<"heroPos"<<getHeroPos();
+    GameObject::init(data);
     qDebug()<<"---init MotaMap---end";
 }
 
@@ -218,6 +300,9 @@ void MotaMap::tick()
     qDebug()<<"---Now Show the MotaMap's Information---";
     m_tower->tick();
     for(auto it :m_map) it->tick();
+
+    for(auto it :m_objectMap) it->tick();
+    qDebug()<<"---Now Show the MotaMap's Information--- end";
 }
 
 void MotaMap::solutePacketData(InsPacketData *data)
@@ -274,6 +359,31 @@ QVector<QVector<bool> > MotaMap::getValiedMap(int layer)
     return m_map[layer]->getValiedMatrix();
 }
 
+QVector<int> MotaMap::getTowerLink()
+{
+    return m_tower->getLayerLinkedList();
+}
+
+void MotaMap::nextLayer()
+{
+    m_tower->nextLayer();
+}
+
+int MotaMap::getNextLayer()
+{
+    return m_tower->getNextLayer();
+}
+
+int MotaMap::getPreLayer()
+{
+    return m_tower->getPreLayer();
+}
+
+void MotaMap::nextLayer(int layer)
+{
+    m_tower->setNowLayer(layer);
+}
+
 bool MotaMap::elementIsValied(int layer, int x, int y)
 {
     if(layer<m_tower->getAllLayers())
@@ -289,11 +399,15 @@ bool MotaMap::elementIsValied(int layer, int x, int y)
 QJsonObject MotaMap::getItemData()
 {
 
-    QJsonObject obj;
+    QJsonObject obj=GameObject::getItemData();
 
-    obj.insert("Type","Map");
+    obj.insert("MapLayer",(int)m_tower->getAllLayers());
 
-    QJsonObject dataObj;
+    QJsonArray mapSize;
+    mapSize.append(mapNetWidth());
+    mapSize.append(mapNetHeight());
+    obj.insert("MapSize",mapSize);
+
 
     QJsonArray mapArray;
     for(int i=0;i<m_map.size();++i)
@@ -311,19 +425,94 @@ QJsonObject MotaMap::getItemData()
         }
         mapArray.append(preLayerMap);
     }
-    dataObj.insert("Matrix",mapArray);
+    obj.insert("MapMatrix",mapArray);
 
-    QJsonArray pixIndex;
-    QJsonArray pixSourceIndex;
-    for(auto it=m_tilePixDictionary.begin();it!=m_tilePixDictionary.end();it++)
+
+    QJsonArray mapValiedArray;
+    for(int i=0;i<m_map.size();++i)
     {
-        pixIndex.append(it.key());
-        pixSourceIndex.append(it.value());
+        QJsonArray preLayerMap;
+        QVector<QVector<bool>> mapMatrix=m_map[i]->getValiedMatrix();
+        for(auto it:mapMatrix)
+        {
+            QJsonArray preRow;
+            for(auto it2:it)
+            {
+                preRow.append((int)it2);
+            }
+            preLayerMap.append(preRow);
+        }
+        mapValiedArray.append(preLayerMap);
     }
-    dataObj.insert("PixIndex",pixIndex);
-    dataObj.insert("PixSourceIndex",pixSourceIndex);
+    obj.insert("ValiedErea",mapValiedArray);
 
-    obj.insert("Data",dataObj);
+
+    QJsonArray mapObjectArray;
+    for(int i=0;i<m_objectMap.size();++i)
+    {
+        QJsonArray preLayerMap;
+        QVector<QVector<int>> mapMatrix=m_objectMap[i]->mapMatrix();
+        for(auto it:mapMatrix)
+        {
+            QJsonArray preRow;
+            for(auto it2:it)
+            {
+                preRow.append(it2);
+            }
+            preLayerMap.append(preRow);
+        }
+        mapObjectArray.append(preLayerMap);
+    }
+    obj.insert("MapObjectMatrix",mapObjectArray);
+
+
+    //upPos
+    QJsonArray upPosArray;
+    auto upPos=m_tower->layerUpPos();
+    for(auto it=upPos.begin();it!=upPos.end();++it)
+    {
+        if(it.value().first!=-1)
+        {
+        QJsonArray layerPosArray;
+        layerPosArray.append(it.value().first);
+        layerPosArray.append(it.value().second);
+        upPosArray.append(layerPosArray);
+        }
+    }
+    upPosArray.append(false);
+    obj.insert("UpPos",upPosArray);
+
+    //downPos
+    QJsonArray downPosArray;
+    downPosArray.append(false);
+    auto downPos=m_tower->layerDownPos();
+    for(auto it=downPos.begin();it!=downPos.end();++it)
+    {
+        if(it.value().first!=-1)
+        {
+            QJsonArray layerPosArray;
+            layerPosArray.append(it.value().first);
+            layerPosArray.append(it.value().second);
+            downPosArray.append(layerPosArray);
+        }
+
+    }
+    obj.insert("DownPos",downPosArray);
+
+
+
+
+    obj.insert("HeroId",m_objectMap[0]->getHeroId());
+
+    QJsonArray linkArray;
+    for(auto it:m_tower->getLayerLinkedList())
+    {
+        linkArray.append(it);
+    }
+
+    obj.insert("MapLayerLinkedList",linkArray);
+
+
 
     return obj;
 }
@@ -369,6 +558,11 @@ QPoint MotaMap::getElementPoint(int layer, int x, int y)
     return m_map[layer]->getElementPoint(x,y);
 }
 
+QPair<int, int> MotaMap::getMapInterval(int layer)
+{
+    return m_map[layer]->getPerElementSize();
+}
+
 QPair<int, QPair<int, int> > MotaMap::getHeroPos()
 {
     qDebug()<<"MotaMap::getHeroPos()"<<m_tower->getNowLayer()<<" --- "<<m_objectMap[m_tower->getNowLayer()]->mapMatrix();
@@ -406,7 +600,106 @@ void MotaMap::objectMove(int layer, int oldX, int oldY, int newX, int newY)
     m_objectMap[layer]->objectMove(oldX,oldY,newX,newY);
 }
 
+void MotaMap::setItemPos(int layer, int x, int y, int itemId)
+{
+    m_objectMap[layer]->setItemPos(x,y,itemId);
+}
+
+QPair<int, int> MotaMap::getUpPos()
+{
+    return m_tower->getUpPos(m_tower->getNowLayer());
+}
+
+QPair<int, int> MotaMap::getDownPos()
+{
+    return m_tower->getDownPos(m_tower->getNowLayer());
+}
+
+QPair<int, int> MotaMap::getUpPos(int layer)
+{
+return m_tower->getUpPos(layer);
+}
+
+QPair<int, int> MotaMap::getDownPos(int layer)
+{
+return m_tower->getDownPos(layer);
+}
+
+void MotaMap::heroMoveToNextLayer(int layer, int x, int y)
+{
+    //获取当前hero的位置，修改至目标位置。
+
+    int nowLayer=m_tower->getNowLayer();
+    int heroId=m_objectMap[nowLayer]->getHeroId();
+    m_objectMap[nowLayer]->clearHero();
+    m_objectMap[layer]->setHeroPos(heroId,x,y);
+    m_tower->setNowLayer(layer);
+}
+
+void MotaMap::heroChanged(int newId)
+{
+    for(auto it:m_objectMap)
+    {
+        it->initHero(newId);
+    }
+}
+
+void MotaMap::addObject(int layer, int x, int y, int index)
+{
+    m_objectMap[layer]->addObject(x,y,index);
+}
+
+void MotaMap::delObject(int index)
+{
+    for(auto it:m_objectMap)
+    {
+        it->delObject(index);
+    }
+    emit objectDeleted(index);
+}
+
+
+QVector<Model2DObjectMap *> MotaMap::objectMap() const
+{
+    return m_objectMap;
+}
+
+Model2DObjectMap *MotaMap::getObjectMapByLayer(int layer)
+{
+    if(layer>=0 && layer<m_objectMap.size())
+    {
+        return m_objectMap[layer];
+    }
+    return nullptr;
+}
 
 
 
 
+
+
+int MotaMap::mapNetWidth() const
+{
+    return m_mapNetWidth;
+}
+
+void MotaMap::setMapNetWidth(int newMapNetWidth)
+{
+    if (m_mapNetWidth == newMapNetWidth)
+        return;
+    m_mapNetWidth = newMapNetWidth;
+    emit mapNetWidthChanged();
+}
+
+int MotaMap::mapNetHeight() const
+{
+    return m_mapNetHeight;
+}
+
+void MotaMap::setMapNetHeight(int newMapNetHeight)
+{
+    if (m_mapNetHeight == newMapNetHeight)
+        return;
+    m_mapNetHeight = newMapNetHeight;
+    emit mapNetHeightChanged();
+}
