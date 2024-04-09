@@ -71,6 +71,8 @@ signals:
     void sceneCountChanged();
     void sceneSizeChanged();
     void initFinished();
+    //可优化至基类中
+    void actionSend(QString);
 };
 
 #endif // EDITMANAGER_H

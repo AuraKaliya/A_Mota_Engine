@@ -491,7 +491,9 @@ void EditManager::setNowGameObject(GameObject *gameObject)
 {
     m_nowGameObject=gameObject;
     qDebug()<<"EditManager::nowGameObjectChanged";
+    QString actionStr="GameObject select:"+gameObject->getClassName()+" "+gameObject->getName();
     emit nowGameObjectChanged(m_nowGameObject);
+    emit actionSend(actionStr);
 }
 
 void EditManager::setNowGameObject(unsigned int id)
@@ -500,7 +502,9 @@ void EditManager::setNowGameObject(unsigned int id)
     if(gameObject!=nullptr)
     {
         m_nowGameObject=gameObject;
+        QString actionStr="GameObject select:"+gameObject->getClassName()+" "+gameObject->getName();
         emit nowGameObjectChanged(m_nowGameObject);
+        emit actionSend(actionStr);
     }
     else
     {

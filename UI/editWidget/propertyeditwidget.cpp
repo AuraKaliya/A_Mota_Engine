@@ -29,7 +29,7 @@ PropertyEditWidget::PropertyEditWidget(QWidget *parent)
 
 
     connect(EditSystem::getInstance()->getManager(),&EditManager::nowGameObjectChanged,this,[this](GameObject* obj){
-        qDebug()<<"objectSelectChanged"<<obj<<obj->getClassName()<<obj->getName();
+        //qDebug()<<"objectSelectChanged"<<obj<<obj->getClassName()<<obj->getName();
         //m_nowGameObject=obj;
         setNowGameObject(obj);
         m_updateFlagObj=true;
@@ -37,7 +37,7 @@ PropertyEditWidget::PropertyEditWidget(QWidget *parent)
     });
 
     connect(EditSystem::getInstance()->getManager(),&EditManager::nowGameObjectItemChanged,this,[this](GameObjectItem* item){
-        qDebug()<<"itemSelectChanged"<<item->getLinkObj()->getName();
+        //qDebug()<<"itemSelectChanged"<<item->getLinkObj()->getName();
         m_nowGameObjectItem=item;
         m_updateFlagItem=true;
         updateWidget();

@@ -78,6 +78,12 @@ void UIManager::loadUI()
 
         connect(EditSystem::getInstance()->getManager(),SIGNAL(initFinished()),m_itemTreeUI,SLOT(updateTree()));
 
+        //不越层调用 ---使用edit而非ui中的
+        connect(EditSystem::getInstance()->getManager(),SIGNAL(actionSend(QString)),m_historyWidget,SLOT(addAction(QString)));
+
+
+
+
         connect(PluginSystem::getInstance()->getManager(),&PluginManager::pluginLoadFinished,this,[this](){
             for(auto it:PluginSystem::getInstance()->getManager()->pluginWidgetList())
             {
@@ -87,6 +93,10 @@ void UIManager::loadUI()
                 connect(w,SIGNAL(instructionSend(QString)),m_historyWidget,SLOT(addInstruction(QString)));
             }
         });
+
+
+
+
 
 
         //统一设置--Editor
