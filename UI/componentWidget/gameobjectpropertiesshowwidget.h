@@ -32,9 +32,7 @@ private:
     StateLabel * m_optionPropertyLabel=nullptr;
     QVector<StateLabel*> m_optionLabelList{};
 
-
     QVector<PropertyLabelWidget*> m_propertyList{};
-
 
     int m_nowShowWidgetIndex=0;
     bool m_hotUpdate=false;

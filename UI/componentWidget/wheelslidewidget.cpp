@@ -1,5 +1,6 @@
 #include "wheelslidewidget.h"
 
+#include <QCoreApplication>
 #include <QWheelEvent>
 
 QWidget *WheelSlideWidget::getArea() const
@@ -22,9 +23,24 @@ void WheelSlideWidget::setArea(int width, int height)
 
 void WheelSlideWidget::addWidgetInArea(QWidget *w, int x, int y)
 {
+    //qDebug()<<"WheelSlideWidget::addWidgetInArea:  w:"<<w->rect()<<"=="<<x<<y;
+    w->setParent(nullptr);
     w->setParent(m_area);
     w->move(x,y);
+    m_widgetList.append(w);
+    m_area->resize(x+w->width(),y+w->height());
     m_area->adjustSize();
+    //qDebug()<<"WheelSlideWidget::addWidgetInArea:  areaRect:"<<m_area->rect();
+}
+
+void WheelSlideWidget::clearWidgetList()
+{
+    for(auto it:m_widgetList)
+    {
+        it->setParent(nullptr);
+        it->deleteLater();
+    }
+    QCoreApplication::processEvents();
 }
 
 int WheelSlideWidget::getBorder() const

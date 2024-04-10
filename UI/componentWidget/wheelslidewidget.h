@@ -18,6 +18,7 @@ enum wheelDirection
 private:
     wheelDirection m_wheelDirection=NoDirection;
     QWidget* m_area;
+    QVector<QWidget*>m_widgetList;
     int m_border=0;
 public:
 
@@ -27,6 +28,7 @@ public:
     void setArea(QWidget *newArea);
     void setArea(int width,int height);
     void addWidgetInArea(QWidget*w,int x,int y);
+    void clearWidgetList();
     int getBorder() const;
     void setBorder(int newBorder);
     void updateArea();

@@ -3,7 +3,7 @@
 ModelBag::ModelBag(QObject *parent)
     : ComponentObject{parent}
 {
-
+setObjectName("ModelBag");
 }
 
 void ModelBag::tick()

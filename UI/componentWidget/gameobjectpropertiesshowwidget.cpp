@@ -29,16 +29,19 @@ void GameObjectPropertiesShowWidget::initShowArea()
     if(m_baseInfoWidget!=nullptr)
     {
         m_baseInfoWidget->setParent(nullptr);
+        m_baseInfoWidget->clearWidgetList();
         m_baseInfoWidget->deleteLater();
     }
 
     if(m_componetInfoWidget!=nullptr)
     {
         m_componetInfoWidget->setParent(nullptr);
-        m_baseInfoWidget->deleteLater();
+        m_componetInfoWidget->clearWidgetList();
+        m_componetInfoWidget->deleteLater();
     }
 
     QCoreApplication::processEvents();
+
     m_componetInfoWidget=nullptr;
     m_baseInfoWidget=nullptr;
 
@@ -64,7 +67,6 @@ void GameObjectPropertiesShowWidget::initShowArea()
         //GID GOClass Name Property?
         initBaseInfoWidget();
         initComponentInfoWidget();
-
     }else
     {
         qDebug()<<"No LinkObject";
@@ -104,17 +106,16 @@ void GameObjectPropertiesShowWidget::initBaseInfoWidget()
 
 void GameObjectPropertiesShowWidget::initComponentInfoWidget()
 {
+    qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================";
     //获取GO的Component列表
     QVector<QString>* component=SourceSystem::getInstance()->getManager()->getComponentByGameObjectName(m_linkObject->getClassName());
-
     //qDebug()<<m_linkObject->getClassName()<<"   QVector<QMetaProperty>* vector:   "<<vector->size();
     //对每个Component生成一个Widget，获取component的属性
-
-    qDebug()<<"component"<<*component;
+    //qDebug()<<"component"<<*component;
    int widgetSpacing=10;
     for(int i=0;i<component->size();++i)
     {
-        qDebug()<<"Now Component: "<<((*component)[i]);
+        //qDebug()<<"Now Component: "<<((*component)[i]);
         QVector<QMetaProperty>* vector=SourceSystem::getInstance()->getManager()->getComponentPropertyByComponentName((*component)[i]);
 
         QWidget * widget=new QWidget(m_componetInfoWidget);
@@ -125,7 +126,7 @@ void GameObjectPropertiesShowWidget::initComponentInfoWidget()
 
         titleLabel->setFont(EngineStyle::getInstance()->thirdTitleFont());
 
-        titleLabel->setMinimumHeight(50);
+        titleLabel->setMinimumHeight(30);
         titleLabel->adjustSize();
         titleLabel->move(0,0);
 
@@ -145,7 +146,7 @@ void GameObjectPropertiesShowWidget::initComponentInfoWidget()
             w->move(spacing,spacing+headHeight+((j)*(w->height()+spacing)));
             w->setVisible(true);
             //m_componetInfoWidget->addWidgetInArea(w,spacing+((i%2)*(w->width()+spacing)),spacing+((i/2)*(w->height()+spacing)));
-            qDebug()<<"w:"<<w->geometry();
+            //qDebug()<<"w:"<<w->geometry();
 
             if(m_hotUpdate)
             {
@@ -162,20 +163,25 @@ void GameObjectPropertiesShowWidget::initComponentInfoWidget()
 //
         //qDebug()<<"m_componetInfoWidget";
         //m_componetInfoWidget->addWidgetInArea(widget,widgetSpacing+((i%1)*(widget->width()+widgetSpacing)),widgetSpacing+((i/1)*(widget->height()+widgetSpacing)));
-        m_componetInfoWidget->addWidgetInArea(widget,0,widgetSpacing+((i/1)*(widget->height()+widgetSpacing)));
+        m_componetInfoWidget->addWidgetInArea(widget,0,i*(widget->height()+widgetSpacing));
+        qDebug()<<"Check:componet widget"<<widget->geometry()<<"====="<<((i/1)*(widget->height()+widgetSpacing));
+        //qDebug()<<"Check:componet widget"<<widget->geometry()<<"====="<<widgetSpacing+((i/1)*(widget->height()+widgetSpacing));
+
         //
         //qDebug()<<"widget:"<<widget->geometry();
-        qDebug()<<"m_componetInfoWidget end";
+        //qDebug()<<"m_componetInfoWidget end";
     }
 //    qDebug()<<"hahaha4";
    m_componetInfoWidget->setWheelDirection(WheelSlideWidget::VDirection);
     //对属性进行可视化，作为初始编辑。
+   qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================end";
 }
 
 void GameObjectPropertiesShowWidget::initWidget()
 {
     initShowArea();
     initOptionArea();
+
     for(auto it:m_optionLabelList)
     {
         it->setVisible(true);
@@ -183,7 +189,6 @@ void GameObjectPropertiesShowWidget::initWidget()
     for(auto it:m_propertyList)
     {
         it->setVisible(true);
-        //it->setStyleSheet(EngineStyle::getInstance()->editLabelStyle());
     }
 
     for(auto it: m_optionLabelList)
@@ -199,8 +204,10 @@ void GameObjectPropertiesShowWidget::initWidget()
     m_nowShowWidgetIndex=0;
     m_showWidgetList[m_nowShowWidgetIndex]->raise();
     m_showWidgetList[m_nowShowWidgetIndex]->show();
+
     m_optionLabelList[0]->setNowState(SourceManageLabelState::Show);
     m_optionLabelList[0]->setStyleSheet("border-radius:10px;color: white;background-color:rgba(52,58,64,0.6);");
+
     update();
 }
 
