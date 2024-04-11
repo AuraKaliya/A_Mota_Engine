@@ -8,6 +8,16 @@ QWidget *WheelSlideWidget::getArea() const
     return m_area;
 }
 
+QWidget *WheelSlideWidget::getLastWidget()
+{
+    QWidget* w=nullptr;
+    if(m_widgetList.size()>0)
+    {
+        w=m_widgetList[m_widgetList.size()-1];
+    }
+    return w;
+}
+
 void WheelSlideWidget::setArea(QWidget *newArea)
 {
     m_area = newArea;

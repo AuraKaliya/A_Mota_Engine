@@ -25,6 +25,7 @@ public:
     explicit WheelSlideWidget(QWidget *parent = nullptr);
     void setWheelDirection(wheelDirection direction);
     QWidget *getArea() const;
+    QWidget* getLastWidget();
     void setArea(QWidget *newArea);
     void setArea(int width,int height);
     void addWidgetInArea(QWidget*w,int x,int y);

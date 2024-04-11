@@ -106,16 +106,13 @@ void GameObjectPropertiesShowWidget::initBaseInfoWidget()
 
 void GameObjectPropertiesShowWidget::initComponentInfoWidget()
 {
-    qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================";
+    //qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================";
     //获取GO的Component列表
     QVector<QString>* component=SourceSystem::getInstance()->getManager()->getComponentByGameObjectName(m_linkObject->getClassName());
-    //qDebug()<<m_linkObject->getClassName()<<"   QVector<QMetaProperty>* vector:   "<<vector->size();
     //对每个Component生成一个Widget，获取component的属性
-    //qDebug()<<"component"<<*component;
    int widgetSpacing=10;
     for(int i=0;i<component->size();++i)
     {
-        //qDebug()<<"Now Component: "<<((*component)[i]);
         QVector<QMetaProperty>* vector=SourceSystem::getInstance()->getManager()->getComponentPropertyByComponentName((*component)[i]);
 
         QWidget * widget=new QWidget(m_componetInfoWidget);
@@ -145,9 +142,6 @@ void GameObjectPropertiesShowWidget::initComponentInfoWidget()
             //现在
             w->move(spacing,spacing+headHeight+((j)*(w->height()+spacing)));
             w->setVisible(true);
-            //m_componetInfoWidget->addWidgetInArea(w,spacing+((i%2)*(w->width()+spacing)),spacing+((i/2)*(w->height()+spacing)));
-            //qDebug()<<"w:"<<w->geometry();
-
             if(m_hotUpdate)
             {
                 w->setHotUpdate(true);
@@ -155,26 +149,26 @@ void GameObjectPropertiesShowWidget::initComponentInfoWidget()
 
             m_propertyList.append(w);
         }
-        //widget->setStyleSheet("background-color:white");
-        //widget->adjustSize();
+
         widget->setFixedHeight(headHeight+spacing+(((vector->size()))*(50+spacing))+50);
         widget->setVisible(true);
-        //qDebug()<<"widget:"<<widget->size();
-//
-        //qDebug()<<"m_componetInfoWidget";
-        //m_componetInfoWidget->addWidgetInArea(widget,widgetSpacing+((i%1)*(widget->width()+widgetSpacing)),widgetSpacing+((i/1)*(widget->height()+widgetSpacing)));
-        m_componetInfoWidget->addWidgetInArea(widget,0,i*(widget->height()+widgetSpacing));
-        qDebug()<<"Check:componet widget"<<widget->geometry()<<"====="<<((i/1)*(widget->height()+widgetSpacing));
-        //qDebug()<<"Check:componet widget"<<widget->geometry()<<"====="<<widgetSpacing+((i/1)*(widget->height()+widgetSpacing));
 
-        //
-        //qDebug()<<"widget:"<<widget->geometry();
-        //qDebug()<<"m_componetInfoWidget end";
+        QWidget* lastWidget=m_componetInfoWidget->getLastWidget();
+        if(lastWidget==nullptr)
+        {
+            m_componetInfoWidget->addWidgetInArea(widget,0,0);
+        }
+        else
+        {
+            m_componetInfoWidget->addWidgetInArea(widget,0,lastWidget->y()+lastWidget->height()+widgetSpacing);
+        }
+
+        //qDebug()<<"Check:componet widget"<<widget->geometry()<<"====="<<((i/1)*(widget->height()+widgetSpacing));
     }
-//    qDebug()<<"hahaha4";
+
    m_componetInfoWidget->setWheelDirection(WheelSlideWidget::VDirection);
     //对属性进行可视化，作为初始编辑。
-   qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================end";
+   //qDebug()<<"==================void GameObjectPropertiesShowWidget::initComponentInfoWidget()================end";
 }
 
 void GameObjectPropertiesShowWidget::initWidget()
