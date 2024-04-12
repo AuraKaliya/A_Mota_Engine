@@ -29,6 +29,7 @@ bool PluginSystem::systemStart()
 bool PluginSystem::systemInit()
 {
  m_pluginManager->initPluginList();
+ m_pluginManager->setRootWidget(static_cast<UIWidget*>(parent()));
  return true;
 }
 

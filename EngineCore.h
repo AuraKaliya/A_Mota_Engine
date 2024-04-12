@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class EngineCore; }
 QT_END_NAMESPACE
 
-class EngineCore : public QWidget
+class EngineCore : public UIWidget
 {
     Q_OBJECT
 
@@ -39,6 +39,7 @@ public:
 protected:
 
     bool eventFilter(QObject* obj, QEvent*e)override;
+    void mousePressEvent(QMouseEvent* e)override;
     void keyPressEvent(QKeyEvent* e)override;
     void keyReleaseEvent(QKeyEvent* e)override;
 
@@ -68,6 +69,7 @@ private:
 signals:
     void closeEngine();
     void actionSend(QString str);
+
 private slots:
 
     //**test****//

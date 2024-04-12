@@ -12,7 +12,6 @@
 #include <DATA/baseClass/gamedemo.h>
 #include <DATA/baseClass/gameobjectitem.h>
 #include <DATA/baseClass/pixsource.h>
-
 #include <TOOL/translateTool/valuetranslator.h>
 #include <TOOL/template/Factory.hpp>
 #include <TOOL/template/Registor.hpp>
@@ -39,6 +38,11 @@ class SourceManager : public QObject
     Q_OBJECT
 
 public:
+    enum SourceSystemError
+    {
+      ImportSource=1000,
+      GameObjectRegist=1001
+    };
     enum DefaultSource
     {
         Image,
@@ -86,7 +90,9 @@ public:
     GameObjectItem* getGameObjectItemById(unsigned int id);
     void registerGameObjectSample(GameObject* obj,QString objClass);
     void registerGameObjectSource(GameObject* obj,QString objName);
+
     void modifySource(QByteArray data,QString path);
+
     QString getSourcePathById(unsigned int id);
     QPixmap* getPixmapById(unsigned int id);
     QPixmap* getPixmapById(unsigned int id,bool defaultPix);
@@ -108,6 +114,7 @@ public:
     QVector<QPixmap> cutPixFromId(unsigned int id,int startX,int startY,int perWidth,int perHeight,int xInterval,int yInterval);
     QVector<QVector<QPixmap* >> getMultiplePixByControlList(unsigned int,QString);
     QVector<QVector<int>> getIndexListByStr(QString indexStrList);
+
     GameDemo* getNowDemo();
     void outPortDemo();
 
@@ -125,6 +132,7 @@ protected:
     static void readJsonFileToSource(QJsonObject obj);
     static SourceMetaData* findSourceMetaData(unsigned int id);
     void setNowDemo(GameDemo* demo);
+    void solveError(SourceSystemError error);
 private:
     explicit SourceManager(QObject *parent = nullptr);
 

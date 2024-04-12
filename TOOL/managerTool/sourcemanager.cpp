@@ -138,9 +138,7 @@ SourceManager::SourceManager(QObject *parent)
     connect(MotaDemo::getInstance(),&MotaDemo::demoFuncRegistToManager,this,[=](SoluteFunc func,QString funcName){
         emit newFuncRegisted(func,funcName);
     });
-
         //绑定GO创立事件
-
     connect(MotaDemo::getInstance(),&MotaDemo::objectCreated,this,[=](GameObject* newGO){
         //判断是否注册成功并进行处理。
         registerGameObjectById(m_maxGameObjectId,newGO);
@@ -155,8 +153,6 @@ SourceManager::SourceManager(QObject *parent)
         m_maxGameObjectId=qMax(id+1,m_maxGameObjectId);
         qDebug()<<"register GameObject "<<id;
     });
-
-
     setNowDemo(MotaDemo::getInstance());
 
 }
@@ -172,33 +168,37 @@ SourceManager *SourceManager::getInstance()
 
 void SourceManager::importSource(QString path)
 {
-
     //判断path的合法性
-    QString tail=path.split(".")[1];
+    QString tail;
+    QStringList tmpList=path.split(".");
+    if(tmpList.size()>1)
+    {
+        tail=tmpList[tmpList.size()-1];
+    }
+    else
+    {
+        qDebug()<<"SourceManager::importSource|Action Failed! path:"<<path;
+        solveError(SourceSystemError::ImportSource);
+    }
     //分类--策略模式 -- 调用相应的载入函数
     auto it =m_importStrategise.find(tail);
     if(it!=m_importStrategise.end())
     {
         bool flag=it.value()(path);
-
         if(!flag)
         {
             //添加失败
-            qDebug()<<"path:"<<path;
-            qDebug()<<"添加失败";
+            qDebug()<<"SourceManager::importSource|Action Failed! path:"<<path;
+            solveError(SourceSystemError::ImportSource);
         }
         else
         {
             //添加成功
-            qDebug()<<"path:"<<path;
-            qDebug()<<"添加成功";
             emit addSource();
         }
     }
-
     //无论结果如何，idx都会增加。
     m_maxSourceId++;
-
 }
 
 void SourceManager::addGameObject(GameObject *gameObject)
@@ -969,4 +969,9 @@ SourceMetaData *SourceManager::findSourceMetaData(unsigned int id)
 void SourceManager::setNowDemo(GameDemo *demo)
 {
     m_nowDemo=demo;
+}
+
+void SourceManager::solveError(SourceSystemError error)
+{
+
 }

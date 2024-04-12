@@ -47,16 +47,29 @@ void PluginManager::loadPlugins()
                 m_pluginWidgetList.append(p->getWidget());
                 p->work();
             }
-
         }
         m_pluginDictionary.insert(p->getPluginName(),p);
     }
     emit pluginLoadFinished();
 }
 
+void PluginManager::setRootWidget(UIWidget *rootWidget)
+{
+    if(rootWidget==nullptr)
+    {
+        return;
+    }
+    else
+    {
+        //qDebug()<<" PLUGIN MANAGER set ROOT WIDGET";
+    }
+    m_rootWidget=rootWidget;
+}
+
 PluginManager::PluginManager(QObject *parent)
     : QObject{parent}
 {
+    m_rootWidget=nullptr;
     m_pluginDir=new QDir(qApp->applicationDirPath()+"/plugins");
 
     //==========test==========

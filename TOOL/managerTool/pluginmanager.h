@@ -17,6 +17,7 @@ public:
 
     void initPluginList();
     void loadPlugins();
+    void setRootWidget(UIWidget* rootWidget);
     QVector<QWidget *> pluginWidgetList() const;
 
 private:

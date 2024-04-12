@@ -21,7 +21,7 @@
 
 
 EngineCore::EngineCore(QWidget *parent)
-    : QWidget(parent)
+    : UIWidget(parent)
     , ui(new Ui::EngineCore)
 {
     ui->setupUi(this);
@@ -177,6 +177,12 @@ bool EngineCore::eventFilter(QObject *obj, QEvent *e)
     {
         return QWidget::eventFilter(obj,e);
     }
+}
+
+void EngineCore::mousePressEvent(QMouseEvent *e)
+{
+    emit clickedHere(QPoint(e->globalPosition().x(),e->globalPosition().y()));
+    UIWidget::mousePressEvent(e);
 }
 
 void EngineCore::keyPressEvent(QKeyEvent *e)

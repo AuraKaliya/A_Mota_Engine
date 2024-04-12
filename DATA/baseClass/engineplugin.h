@@ -18,7 +18,10 @@ public:
     virtual QWidget* getWidget()=0;
     virtual QString getPluginName()=0;
     virtual void initApp(UIWidget*)=0;
-
+protected:
+    QString m_pluginName    ="Default"    ;
+    QWidget* m_widget       =nullptr      ;
+    UIWidget* m_rootWidget  =nullptr      ;
 };
 
 Q_DECLARE_INTERFACE(EnginePlugin,PluginManagerInterfaceIID)

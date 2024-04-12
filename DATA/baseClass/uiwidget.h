@@ -36,7 +36,7 @@ public:
     UIState nowUIState() const;
     void setNowUIState(UIState newNowUIState);
 
-private:
+protected:
     GameDemo* m_nowDemo=nullptr;
     UIState m_nowUIState=Editor;
 
@@ -46,6 +46,7 @@ signals:
     void actionSend(QString);
     void instructionSend(QString);
     void eventSend(QString);
+    void clickedHere(QPoint);
 };
 
 #endif // UIWIDGET_H
