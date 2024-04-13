@@ -213,7 +213,7 @@ void SourceTreeWidget::initSource()
         SourceCardWidget* card=new SourceCardWidget(m_viewsList[1][0]);
 
         //card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOSourceByName(it->getName()));
-        qDebug()<<"%%%%%%%%%"<<it->getId();
+        //qDebug()<<"%%%%%%%%%"<<it->getId();
         //card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOById(it->getId()));
         card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOSourceByName(it->getName()));
 
@@ -274,7 +274,7 @@ void SourceTreeWidget::adjustAreaSize()
 
 void SourceTreeWidget::redoMove()
 {
-    qDebug()<<"1 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
+    //qDebug()<<"1 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
     int nowY=m_area->y();
     int heightLimit=this->height();
 
@@ -288,7 +288,7 @@ void SourceTreeWidget::redoMove()
     }
 
 //    m_area->move(m_area->x(),0);
-    qDebug()<<"2 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
+    //qDebug()<<"2 now area:"<<m_area->y()<<" "<<m_area->height()<<" |"<<this->height();
     update();
 }
 

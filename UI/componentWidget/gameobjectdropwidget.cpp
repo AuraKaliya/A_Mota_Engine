@@ -74,7 +74,7 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                     if(QString::fromLocal8Bit(data->data("Class_"+QString::number(i))).split("_")[0]=="GameObject")
                     {
 
-                        qDebug()<<"solve ! dropevent~!!";
+                        //qDebug()<<"solve ! dropevent~!!";
                         //GO
                         //创建具体GO，并交给SourceManager管理
                         QString name=QString::fromLocal8Bit(data->data("Name_"+QString::number(i)));
@@ -82,7 +82,7 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
 
                         //GameObject* sourceObj=SourceSystem::getInstance()->getManager()->getGameObjectSourceByName(name);
                         GameObject* obj=SourceSystem::getInstance()->getManager()->addGameObjectFromSource(name);
-                        qDebug()<<"obj"<<name<<obj;
+                        //qDebug()<<"obj"<<name<<obj;
                         //创建Item，设置初始值
                         GameObjectItem * item=nullptr;
                         QPointF point =QPointF(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y());
@@ -125,7 +125,24 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
 
                             qDebug()<<"obj::"<<obj<<obj->getId()<<obj->getClassName()<<obj->getName()<<obj->getPixId()<<obj->getPixIdList();
 
-                            QPoint itemPos=static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
+
+                            qDebug()<<"check:drop Pos:";
+                            qDebug()<<"mousePos:"<<e->position();
+                            qDebug()<<"mousePos:"<<m_mousePos;
+                            qDebug()<<"mousePosToMap:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x(),m_mousePos.y()));
+                            qDebug()<<"mousePosToMap2:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(
+                                m_mousePos.x()-((m_linkView->width()-m_linkView->sceneRect().width())/2),
+                                m_mousePos.y()-((m_linkView->height()-m_linkView->sceneRect().height())/2)
+                                                                                                        )
+                                                                                                       );
+                            //qDebug()<<"mousePosToMap2:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
+
+                            //QPoint itemPos=static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
+                                QPoint itemPos=static_cast<MotaDemo*>(demo)->posFromMap(QPoint(
+                                m_mousePos.x()-((m_linkView->width()-m_linkView->sceneRect().width())/2),
+                                m_mousePos.y()-((m_linkView->height()-m_linkView->sceneRect().height())/2)
+                                )
+                                                                                       );
 
                             item=new DynamicItem(obj,*SourceSystem::getInstance()->getManager()->getPixmapByObject(obj));
 

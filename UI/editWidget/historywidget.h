@@ -17,6 +17,7 @@ public slots:
   void addAction(QString str);
   void addInstruction(QString str);
   void addEvent(QString str);
+  void addError(QString str);
 private:
     QTextEdit * m_historyShowView=nullptr;
 signals:

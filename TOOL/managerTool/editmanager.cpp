@@ -127,7 +127,7 @@ void EditManager::initFromDemo()
                    item=new MapItem(it,*SourceSystem::getInstance()->getManager()->getPixmapByObject(it));
 
                    MapItem* mapItem=static_cast<MapItem*>(item);
-                   qDebug()<<"checkMapItem0: --end";
+                   //qDebug()<<"checkMapItem0: --end";
                    QMap<int,PixSource*> map{};
                    for(auto it:it->getPixIdList().split(","))
                    {
@@ -198,6 +198,7 @@ void EditManager::initFromDemo()
                         item->setState(it->drawState());
                         connect(it,&GameObject::drawStateChanged,item,&GameObjectItem::setState);
                         s_nowScene->setSceneRect(0,0,it->getWidth(),it->getHeight());
+
                     }
                 }
             }
@@ -362,7 +363,6 @@ void EditManager::initFromDemo()
                                     //因为在item绘制时是以自己的state为判断标准，所以只用传递一个识别号，让item的逻辑自己判断即可
                                     connect(obj,&GameObject::itemDrawStateChanged,item,&GameObjectItem::setItemState);
                                 }
-
                             }
                         }
                         break;
@@ -404,13 +404,8 @@ void EditManager::initFromDemo()
 
             });
 
-
             //加载默认场景-------------id----可设置为外置控制
             loadNextScene(0);
-
-
-
-
         }
 
 

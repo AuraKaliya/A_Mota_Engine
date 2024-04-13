@@ -57,13 +57,6 @@ void SourceCardViewWidget::addCardWidget(SourceCardWidget *w)
     m_mainLayout->addWidget(w,m_cardWidgetList.size()/3,m_cardWidgetList.size()%3);
     //m_mainLayout->addWidget(w);
     m_cardWidgetList.append(w);
-#if 0
-    qDebug()<<"*************";
-    qDebug()<<"m_cardWidgetList.size()"<<m_cardWidgetList.size();
-    qDebug()<<"this class"<<(int)m_cardType;
-    qDebug()<<"*************";
-#endif
-
     adjustSize();
     m_rect=this->rect();
 }
@@ -196,6 +189,8 @@ void SourceCardViewWidget::dropEvent(QDropEvent *e)
         if(data->hasFormat("ViewClass"))
         if(data->data("ViewClass").toInt()!=(int)m_cardType)
         {
+            QString actionStr("Failed to drop other type widget!");
+            emit actionSend(actionStr);
             qDebug()<<"只能同类型拖拽";
             return;
         }
@@ -203,11 +198,14 @@ void SourceCardViewWidget::dropEvent(QDropEvent *e)
         if(data->hasFormat("Link"))
         if(QString::fromLocal8Bit(data->data("Link"))==QString(m_linkLabel->text()))
         {
+            QString actionStr("Failed to drop self!");
+            emit actionSend(actionStr);
             qDebug()<<"忽略自己拖自己";
             qDebug()<<"this:"<<m_linkLabel<<m_linkLabel->text();
             qDebug()<<"data:"<<QString::fromLocal8Bit(data->data("Link"));
             return;
         }
+
 
         for(int i=0;i<count;++i)
         {
@@ -218,8 +216,10 @@ void SourceCardViewWidget::dropEvent(QDropEvent *e)
                 if(QString::fromLocal8Bit(data->data("Class_"+QString::number(i))).split("_")[0]=="GameObject")
                 {   //GO
                     qDebug()<<"######"<<data->data("Gid_"+QString::number(i)).toInt();
+
                     if(data->data("Gid_"+QString::number(i)).toInt()>0)
                     {
+
                         card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOById(data->data("Gid_"+QString::number(i)).toInt()));
                     }else
                     {
@@ -242,6 +242,8 @@ void SourceCardViewWidget::dropEvent(QDropEvent *e)
             }
 
         }
+        QString actionStr("Drop a card!");
+        emit actionSend(actionStr);
         emit dropDataSoluted();
     }
     else

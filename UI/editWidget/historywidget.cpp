@@ -76,3 +76,8 @@ void HistoryWidget::addEvent(QString str)
     cursor.insertText("\n");
     m_historyShowView->setTextCursor(cursor);
 }
+
+void HistoryWidget::addError(QString str)
+{
+
+}

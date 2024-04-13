@@ -82,8 +82,6 @@ void UIManager::loadUI()
         connect(EditSystem::getInstance()->getManager(),SIGNAL(actionSend(QString)),m_historyWidget,SLOT(addAction(QString)));
 
 
-
-
         connect(PluginSystem::getInstance()->getManager(),&PluginManager::pluginLoadFinished,this,[this](){
             for(auto it:PluginSystem::getInstance()->getManager()->pluginWidgetList())
             {
@@ -105,6 +103,7 @@ void UIManager::loadUI()
             it->setVisible(true);
             it->setNowUIState(Editor);
 
+            //预设Demo
             GameDemo* demo=SourceSystem::getInstance()->getManager()->getNowDemo();
 
             if(demo!=nullptr)
@@ -117,6 +116,18 @@ void UIManager::loadUI()
             {
                 qDebug()<<" WARNNING : NO HAVE NOWDEMO!";
             }
+
+
+            //连接信息传递至historywidget
+
+            connect(it,SIGNAL(actionSend(QString)),     m_historyWidget,SLOT(addAction(QString))        );
+            connect(it,SIGNAL(eventSend(QString)),      m_historyWidget,SLOT(addEvent(QString))         );
+            connect(it,SIGNAL(instructionSend(QString)),m_historyWidget,SLOT(addInstruction(QString))   );
+
+
+
+
+
         }
     }
     else if(m_engineState==EngineState::Player)

@@ -6,6 +6,7 @@
 #include <QSet>
 #include <UI/componentWidget/sourcecardwidget.h>
 #include <TOOL/sourceTool/sourcesystem.h>
+
 #include <QGridLayout>
 
 using doFunc=bool(*)();
@@ -86,6 +87,7 @@ signals:
     void dropDataSoluted();
     void dropStart(SourceCardViewWidget* );
     void widgetResized();
+    void actionSend(QString);
 };
 
 #endif // SOURCECARDVIEWWIDGET_H

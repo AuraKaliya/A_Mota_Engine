@@ -43,27 +43,17 @@ SourceManageWidget::SourceManageWidget(QWidget *parent)
     m_addGameObjectInfoWidget->setLinkSourceTreeWidget(m_sourceTreeWidget);
 
     connect(m_addSourceWidget,&AddSourceWidget::addGameObject,this,[this](){
-        qDebug()<<"addGameObject start";
+        //qDebug()<<"addGameObject start";
         m_addGameObjectInfoWidget->updateList();
         m_addGameObjectInfoWidget->show();
-        qDebug()<<"addGameObject end";
+        //qDebug()<<"addGameObject end";
     });
 
     connect(m_addSourceWidget,&AddSourceWidget::outPort,this,[this](){
-        qDebug()<<"outPort start";
+        //qDebug()<<"outPort start";
         SourceSystem::getInstance()->getManager()->outPortDemo();
-        qDebug()<<"outPort end";
+        //qDebug()<<"outPort end";
     });
-
-
-
-#if 0
-    qDebug()<<"hahaha";
-    qDebug()<<"this Child："<<this->children();
-    for(auto it:this->children())
-        qDebug()<<it<<":"<<it->children();
-    qDebug()<<"this parent: "<<this->parent();
-#endif
 
 
     //setUIStyle();

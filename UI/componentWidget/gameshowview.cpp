@@ -49,20 +49,26 @@ void GameShowView::mouseReleaseEvent(QMouseEvent *e)
     if(!this->scene()->selectedItems().empty())
     {
         QRect rect;
-        rect.setRect(this->mapFromScene(this->scene()->selectedItems()[0]->pos()).x(),this->mapFromScene(this->scene()->selectedItems()[0]->pos()).y(),0,0);
+        //+((width()-scene()->width())/2)
+        //+((height()-scene()->height())/2)
+        rect.setRect(this->mapFromScene(this->scene()->selectedItems()[0]->pos()).x(),
+                     this->mapFromScene(this->scene()->selectedItems()[0]->pos()).y(),
+                     0,0);
         for(auto it:this->scene()->selectedItems())
         {
-            rect.setX(qMin((int)rect.x(),(int)this->mapFromScene(it->pos()).x()));
-            rect.setY(qMin((int)rect.y(),(int)this->mapFromScene(it->pos()).y()));
-            rect.setWidth(qMax((int)rect.width(),(int)(it->x()+it->boundingRect().width()-rect.x())));
-            rect.setHeight(qMax((int)rect.height(),(int)(it->y()+it->boundingRect().height()-rect.y())));
+            //+((width()-scene()->width())/2)
+            //+((height()-scene()->height())/2)
+            rect.setX(qMin((int)rect.x(),(int)(this->mapFromScene(it->pos()).x())));
+            rect.setY(qMin((int)rect.y(),(int)(this->mapFromScene(it->pos()).y())));
+            rect.setWidth(qMax((int)rect.width(),(int)(it->x()+it->boundingRect().width()-rect.x()+((width()-scene()->width())/2))));
+            rect.setHeight(qMax((int)rect.height(),(int)(it->y()+it->boundingRect().height()-rect.y()+((height()-scene()->height())/2))));
 
             qDebug()<<"now Pos!= :"<<it->pos().rx()<<it->pos().ry();
             static_cast<GameObjectItem*>(it)->getLinkObj()->setPosX(it->pos().rx());
             static_cast<GameObjectItem*>(it)->getLinkObj()->setPosY(it->pos().ry());
         }
         m_selectRect=rect;
-
+        qDebug()<<"GameShowView::mouseReleaseEvent  rect"<<m_selectRect;
         //qDebug()<<"***********";
         //qDebug()<<static_cast<GameObjectItem*>(this->scene()->selectedItems()[0])->getLinkObj();
         //qDebug()<<"***********";
@@ -84,4 +90,12 @@ void GameShowView::paintEvent(QPaintEvent *e)
         painters.setPen(pen);
         painters.drawRect(m_selectRect);
     }
+
+
+
+
+
+
+
+
 }
