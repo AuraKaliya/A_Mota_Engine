@@ -3,8 +3,10 @@
 
 
 #include<DATA/baseClass/uiwidget.h>
+
 #include<UI/componentWidget/gameshowview.h>
 #include <UI/componentWidget/gameobjectdropwidget.h>
+
 #include <TOOL/editTool/editsystem.h>
 
 /*
