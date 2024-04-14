@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QMetaProperty>
+#include <QTime>
 
 
 QMap<QString, readFunc> SourceManager::m_importStrategise{};
@@ -684,11 +685,27 @@ GameDemo *SourceManager::getNowDemo()
 
 void SourceManager::outPortDemo()
 {
-    QFile file(m_outPortPath);
+
+    QDir dir(qApp->applicationDirPath());
+    if (!dir.exists("DemoSource")) {
+        dir.mkdir("DemoSource");
+    }
+
+    QString demoName="DefaultDemo";
+    if(m_nowDemo!=nullptr)
+    {
+        demoName=m_nowDemo->objectName();
+    }
+
+
+    QString timestamp=QDateTime::currentDateTime().toString("yyyy_MM_dd_HH_mm_ss");
+
+    QString fileName="DemoSource/"+demoName+"_"+timestamp+".json";
+    QFile file(dir.filePath(fileName));
 
     if(!file.open(QIODevice::WriteOnly))
     {
-        qDebug()<<"ERROR: CAN NOT OPEN FILE"<<m_outPortPath;
+        qDebug()<<"ERROR: CAN NOT OPEN FILE"<<dir.filePath(fileName);
         return;
     }
 

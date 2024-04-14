@@ -144,6 +144,17 @@ QJsonObject MotaNPC::getItemData()
 {
  QJsonObject obj=GameObject::getItemData();
 
+
+
+
+
+
+
+
+
+
+
+
  return obj;
 }
 

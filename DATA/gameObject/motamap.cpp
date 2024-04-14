@@ -499,9 +499,6 @@ QJsonObject MotaMap::getItemData()
     }
     obj.insert("DownPos",downPosArray);
 
-
-
-
     obj.insert("HeroId",m_objectMap[0]->getHeroId());
 
     QJsonArray linkArray;

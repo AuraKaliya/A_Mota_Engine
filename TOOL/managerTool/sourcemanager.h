@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QSet>
 #include <QPixmap>
+#include "QApplication"
 #include <DATA/baseClass/sourcemetadata.h>
 #include <DATA/baseClass/gameobject.h>
 #include <DATA/baseClass/gamedemo.h>
