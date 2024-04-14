@@ -107,25 +107,7 @@ void EditManager::initFromDemo()
                 for(int i=0;i<it->getTowerLink().size();++i)
                 {
                    loadNextScene(i);
-
-//                    item=new Map2DItem(it,*SourceSystem::getInstance()->getManager()->getPixmapByObject(it));
-//                    Map2DItem* mapItem=static_cast<Map2DItem*>(item);
-//                    QMap<int ,QPixmap*> map{};
-//                    for(auto it:it->getPixIdList().split(","))
-//                    {
-//                        QPixmap* pix=SourceSystem::getInstance()->getManager()->getPixmapById(it.toUInt());
-//                        if(pix!=nullptr)
-//                        {
-//                            map[it.toUInt()]=pix;
-//                        }
-//                    }
-
-//                    //初始化
-//                    mapItem->initMap(5,5,map,map.begin().key());
-//                    mapItem->resetMap(static_cast<MotaMap*>(mapItem->getLinkObj())->getMap(i));
-
                    item=new MapItem(it,*SourceSystem::getInstance()->getManager()->getPixmapByObject(it));
-
                    MapItem* mapItem=static_cast<MapItem*>(item);
                    //qDebug()<<"checkMapItem0: --end";
                    QMap<int,PixSource*> map{};
@@ -149,11 +131,9 @@ void EditManager::initFromDemo()
                        {
                            qDebug()<<"checkMapItem1.5 y x element"<<y<<x<<elementList[y][x];
                            mapItem->setPix(x,y,elementList[y][x]);
-
                        }
                    }
                     //qDebug()<<"checkMapItem2: --end";
-
 
                     //获取当前Scene，将Item加入到Scene中
                     s_nowScene->addItem(item);
@@ -242,7 +222,6 @@ void EditManager::initFromDemo()
                                 {
                                     playerItem->setObjPix(* pixSource->pix());
                                     playerItem->initPix(pixSource->stateList(),pixSource->stateIndexList(),0,0,pixSource->getPerW(),pixSource->getPerH(),pixSource->XInterval(),pixSource->YInterval());
-
                                 }
                                 else
                                 {

@@ -255,9 +255,12 @@ GameObject* SourceManager::addGameObjectFromSource(QString objName)
     GameObject* newObj=Factory<GameObject>::GetInstance()->CreateObject(m_gameObjectSourceDictionary[objName]->getClassName());
 
     *newObj<<(*m_gameObjectSourceDictionary[objName]);
-    qDebug()<<"SourceManager::addGameObjectFromSource --check:"<<m_maxGameObjectId;
-    addGameObjectById(newObj,m_maxGameObjectId);
-    m_maxGameObjectId++;
+    qDebug()<<"#####check 0#####:newObj Idx :"<<newObj->getId();
+
+    //qDebug()<<"SourceManager::addGameObjectFromSource --check:"<<m_maxGameObjectId;
+    //addGameObjectById(newObj,m_maxGameObjectId);
+    //m_maxGameObjectId++;
+
     return newObj;
 }
 
@@ -696,7 +699,6 @@ void SourceManager::outPortDemo()
     {
         demoName=m_nowDemo->objectName();
     }
-
 
     QString timestamp=QDateTime::currentDateTime().toString("yyyy_MM_dd_HH_mm_ss");
 

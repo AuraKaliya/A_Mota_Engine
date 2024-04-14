@@ -79,7 +79,6 @@ bool MotaDemo::addMonster(MotaMonster * monster, int posx, int posy)
     auto pos=posFromMapMatrix(QPoint(monster->getPosX(),monster->getPosY()));
     m_motaMap->addObject(m_motaMap->getNowLayer(),pos.first,pos.second,monster->getId());
 
-
     return true;
 }
 
@@ -87,10 +86,8 @@ bool MotaDemo::addNPC(MotaNPC * npc, int posx, int posy)
 {
     qDebug()<<"ADD NPC";
 
-
-
     int id=npc->getId();
-    qDebug()<<npc->getId();
+
     m_objectTypeDictionary[npc->getId()]=NPC;
 
     m_motaNPCList.append(npc);
@@ -101,6 +98,7 @@ bool MotaDemo::addNPC(MotaNPC * npc, int posx, int posy)
     int x=pos.first;
     int y=pos.second;
 
+    qDebug()<<npc->getId();
     qDebug()<<"layer: "<<layer;
 
     qDebug()<<x<<" "<<y;
@@ -110,30 +108,26 @@ bool MotaDemo::addNPC(MotaNPC * npc, int posx, int posy)
     qDebug()<<motaMap()->getObjectMapByLayer(layer)->mapMatrix();
     qDebug()<<"--------------------";
 
-
-
     m_motaMap->addObject(layer,x,y,id);
 
     qDebug()<<"------NEXT  MAP:----";
     qDebug()<<motaMap()->getObjectMapByLayer(layer)->mapMatrix();
     qDebug()<<"--------------------";
 
-    //添入objPosDictionary
-    auto it=m_objPosDictionary.find(id);
-    if(it==m_objPosDictionary.end())
-    {
 
-        //没有--添加
-        m_objPosDictionary.insert(id,QVector<MotaObjectPos>{{layer,x,y}});
-    }
-    else
-    {
-        // 已有 --添加到后面
-        qDebug()<<"find!";
-        it.value().append({layer,x,y});
-    }
-
-
+//    //添入objPosDictionary
+//    auto it=m_objPosDictionary.find(id);
+//    if(it==m_objPosDictionary.end())
+//    {
+//        //没有--添加
+//        m_objPosDictionary.insert(id,QVector<MotaObjectPos>{{layer,x,y}});
+//    }
+//    else
+//    {
+//        // 已有 --添加到后面
+//        qDebug()<<"find!";
+//        it.value().append({layer,x,y});
+//    }
 
     qDebug()<<"ADD NPC  end";
     return true;
@@ -195,8 +189,6 @@ QJsonObject MotaDemo::getDemoSource()
 
     //
     qDebug()<<"check----";
-
-
     qDebug()<<"element:"<<m_element;
     qDebug()<<"m_elementList:"<<m_elementList;
     qDebug()<<"m_elementSort:"<<m_elementSort;
@@ -1030,7 +1022,7 @@ void MotaDemo::init(const QJsonObject *obj)
             for(auto item:tmp.value("List").toArray())
             {
                 GameObject* obj=Factory<GameObject>::GetInstance()->CreateObject(packetName);
-                qDebug()<<"item"<<item.toVariant()<<"\n\n"<<item.isObject()<<item.toObject();
+                //qDebug()<<"item"<<item.toVariant()<<"\n\n"<<item.isObject()<<item.toObject();
                 QJsonObject tmp2=item.toObject();
 
                 //得想办法把obj给加入到List中
@@ -1203,8 +1195,6 @@ void MotaDemo::registToManager()
 
     //对自己注册
     m_objectTypeDictionary[m_motaHero->getId()]=Hero;
-
-
 
     for(auto it:m_motaMonsterList)
     {

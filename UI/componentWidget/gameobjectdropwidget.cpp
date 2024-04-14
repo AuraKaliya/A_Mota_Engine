@@ -62,8 +62,8 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
     // 魔塔
     if(demo->objectName()=="Mota")
     {
-        qDebug()<<"GameObjectDropWidget::dropEvent:  now demo is Mota!";
-        qDebug()<<"check <"<<data;
+        //qDebug()<<"GameObjectDropWidget::dropEvent:  now demo is Mota!";
+        //qDebug()<<"check <"<<data;
         if(data->hasFormat("Count"))
         {
             int count=data->data("Count").toInt();
@@ -73,7 +73,6 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                 {
                     if(QString::fromLocal8Bit(data->data("Class_"+QString::number(i))).split("_")[0]=="GameObject")
                     {
-
                         //qDebug()<<"solve ! dropevent~!!";
                         //GO
                         //创建具体GO，并交给SourceManager管理
@@ -89,8 +88,6 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
 
                         //获取当前释放位置对应的MotaLayer
                         int nowLayer=EditSystem::getInstance()->getManager()->getNowSceneIdx();
-
-
                         //判定添加的GO的类型
                         //可写成策略函数
                         switch(obj->getType())
@@ -111,30 +108,24 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                         break;
                         case GameObject::Type::PlayerCharacter:
                         {
-
                             qDebug()<<"GameObject::Type::PlayerCharacter！";
-
                             qDebug()<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
 
                         }
                         break;
                         case GameObject::Type::NonPlayerCharacter:
                         {
-
                             qDebug()<<"drop--GameObject::Type::NonPlayerCharacter";
-
-                            qDebug()<<"obj::"<<obj<<obj->getId()<<obj->getClassName()<<obj->getName()<<obj->getPixId()<<obj->getPixIdList();
-
-
-                            qDebug()<<"check:drop Pos:";
-                            qDebug()<<"mousePos:"<<e->position();
-                            qDebug()<<"mousePos:"<<m_mousePos;
-                            qDebug()<<"mousePosToMap:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x(),m_mousePos.y()));
-                            qDebug()<<"mousePosToMap2:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(
-                                m_mousePos.x()-((m_linkView->width()-m_linkView->sceneRect().width())/2),
-                                m_mousePos.y()-((m_linkView->height()-m_linkView->sceneRect().height())/2)
-                                                                                                        )
-                                                                                                       );
+                            //qDebug()<<"obj::"<<obj<<obj->getId()<<obj->getClassName()<<obj->getName()<<obj->getPixId()<<obj->getPixIdList();
+                            //qDebug()<<"check:drop Pos:";
+                            //qDebug()<<"mousePos:"<<e->position();
+                            //qDebug()<<"mousePos:"<<m_mousePos;
+                            //qDebug()<<"mousePosToMap:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x(),m_mousePos.y()));
+                            //qDebug()<<"mousePosToMap2:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(
+                                //m_mousePos.x()-((m_linkView->width()-m_linkView->sceneRect().width())/2),
+                                //m_mousePos.y()-((m_linkView->height()-m_linkView->sceneRect().height())/2)
+                                 //                                                                       )
+                                  //                                                                     );
                             //qDebug()<<"mousePosToMap2:"<<static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
 
                             //QPoint itemPos=static_cast<MotaDemo*>(demo)->posFromMap(QPoint(m_mousePos.x()-m_linkView->x()-m_linkView->sceneRect().x(),m_mousePos.y()-m_linkView->y()-m_linkView->sceneRect().y()));
@@ -143,9 +134,7 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                                 m_mousePos.y()-((m_linkView->height()-m_linkView->sceneRect().height())/2)
                                 )
                                                                                        );
-
                             item=new DynamicItem(obj,*SourceSystem::getInstance()->getManager()->getPixmapByObject(obj));
-
                             DynamicItem* nonPlayerItem=static_cast<DynamicItem*>(item);
 
                             //由已注册的GameObject拖拽形成的具体Item
@@ -180,9 +169,7 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                             EditSystem::getInstance()->getManager()->getNowScene()->addItem(item);
                             //s_nowScene->addItem(item);
 
-
                             //后续处理---npc
-
                             //位置初始化   --1.获取点对应的坐标 2.对item进行设置setPos
                             //QPoint point=static_cast<MotaDemo*>(demo)->motaMap()->getElementPoint(nowLayer,itemPos.x(),itemPos.y());
                             item->setPos(itemPos);
@@ -190,7 +177,6 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                             {
                                 //item 绘制大小
                                 item->setPixScale(QRect(0,0,obj->getWidth(),obj->getHeight()));
-
                                 //添加脚本   --新修正： script应该与item绑定   --这是统一的处理，用于在外部代码中进行控制obj的特性（如 检测敌意范围等）
                                 if(obj->getScript()!="")
                                 {
@@ -199,7 +185,7 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                                 }
 
                                 //将item注册进资源系统
-                                qDebug()<<"additem check:* "<<item->getId();
+                                //qDebug()<<"additem check:* "<<item->getId();
                                 SourceSystem::getInstance()->getManager()->addGameObejctItemById(item,item->getId());
 
                                 //绑定可见属性   ---- 这里表示的是当link的的obj设置为不可见时，其所绘制的所有图都不可见
@@ -209,13 +195,12 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                                 //因为在item绘制时是以自己的state为判断标准，所以只用传递一个识别号，让item的逻辑自己判断即可
                                 connect(obj,&GameObject::itemDrawStateChanged,item,&GameObjectItem::setItemState);
                             }
-
+////////////////////////////////////////////////注册进Demo中////////////////////////////////////////////////
                             //从这里开始，判断是Monster还是NPC；
                             if(obj->getClassName()=="MotaNPC")
                             {
                                 qDebug()<<"Is Mota NPC!";
                                 static_cast<MotaDemo*>(demo)->addNPC(static_cast<MotaNPC*>(obj),itemPos.x(),itemPos.y());
-
                             }
                             else if(obj->getClassName()=="MotaMonster")
                             {
@@ -223,18 +208,15 @@ void GameObjectDropWidget::dropEvent(QDropEvent *e)
                                 static_cast<MotaDemo*>(demo)->addMonster(static_cast<MotaMonster*>(obj),itemPos.x(),itemPos.y());
                             }
 
-
-                            qDebug()<<"-check2-:";
-                            qDebug()<<item->isVisible();
-                            qDebug()<<item->pos();
+                            //qDebug()<<"-check2-:";
+                            //qDebug()<<item->isVisible();
+                            //qDebug()<<item->pos();
                             //static_cast<MotaDemo*>(demo)->motaMap()->tick();
 
                             //static_cast<MotaDemo*>(demo)->addMonster(static_cast<MotaMonster*>(obj));
 
-                            qDebug()<<"check3:";
+                            //qDebug()<<"check3:";
                            // static_cast<MotaDemo*>(demo)->motaMap()->tick();
-
-
                         }
                         break;
                         default :

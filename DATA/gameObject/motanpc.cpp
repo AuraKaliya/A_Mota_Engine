@@ -143,7 +143,7 @@ int MotaNPC::linkMapId() const
 QJsonObject MotaNPC::getItemData()
 {
  QJsonObject obj=GameObject::getItemData();
-
+ obj.insert("SourcePipe",1);
 
 
 

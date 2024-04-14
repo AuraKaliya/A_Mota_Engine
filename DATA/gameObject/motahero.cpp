@@ -162,6 +162,7 @@ QJsonObject MotaHero::getItemData()
     obj.insert("MultiplePix",QString::number(getPixId()));
     obj.insert("StateList",m_showCharacter->getStateList());
     obj.insert("StateIndexList",m_showCharacter->getPixIndexList());
+    obj.insert("SourcePipe",1);
 
     QJsonObject battleObj;
 

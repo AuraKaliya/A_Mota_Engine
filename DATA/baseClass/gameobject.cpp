@@ -218,7 +218,10 @@ QJsonObject GameObject::getItemData()
     obj.insert("Size",sizeArray);
 
     obj.insert("PixIdList",getPixIdList());
+    obj.insert("PixSourceId",getPixIdList());
+
     obj.insert("Script",getScript());
+
     return obj;
 }
 
