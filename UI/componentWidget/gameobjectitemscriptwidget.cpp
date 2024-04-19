@@ -1,5 +1,9 @@
 #include "gameobjectitemscriptwidget.h"
 
+#include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
+
 GameObjectItemScriptWidget::GameObjectItemScriptWidget(QWidget *parent)
     : QWidget{parent}
 {
@@ -70,6 +74,37 @@ void GameObjectItemScriptWidget::initNoScriptWidget()
 
     m_addScriptBtn=new QPushButton(tr("Add"),m_noScriptWidget);
     m_addScriptBtn->setGeometry(20,20,120,60);
+
+
+    connect(m_addScriptBtn,&QPushButton::clicked,this,[this](bool flag){
+        QDir dir(QApplication::applicationDirPath()+"/scripts");
+        qDebug()<<dir.path();
+        QString path=QFileDialog::getOpenFileName(nullptr,QString(),dir.path());
+
+        if(path.isEmpty())
+        {
+            QMessageBox::warning(this,"打开文件","选择文件路径不能为空");
+            return;
+        }
+
+        QString finalFilePath;
+        QStringList tmpList=path.split("/");
+        if(tmpList.size()>1)
+        {
+            finalFilePath=tmpList[tmpList.size()-1];
+        }
+
+        qDebug()<<"final:"<<finalFilePath;
+        ScriptSystem::getInstance()->getManager()->addScript(m_linkItem,"./"+finalFilePath);
+
+        m_linkItem->setScriptBindState(true);
+
+        //需要添加对GO的处理
+        m_hasScriptWidget->setVisible(true);
+        m_noScriptWidget->setVisible(false);
+        m_fileNameBox->setText("./"+finalFilePath);
+
+    });
 
     m_loadScriptBtn=new QPushButton(tr("Load"),m_noScriptWidget);
     m_loadScriptBtn->setGeometry(150,20,120,60);

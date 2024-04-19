@@ -144,15 +144,13 @@ int ScriptManager::soluteInstruction(lua_State *state)
     const char* insType=lua_tostring(state,3);
     int n=lua_tonumber(state,-1);
 
-
-
     QVector<QVariant> list;
     for(int i=4;i<n+4;++i)
     {
         list.append(QVariant(lua_tostring(state,i)));
     }
 
-    qDebug()<<"Check:"<<objectId<<insName<<insType<<list<<n;
+    //qDebug()<<"Check:"<<objectId<<insName<<insType<<list<<n;
 
 
     GameObject* obj=SourceSystem::getInstance()->getManager()->getObjectById(objectId);
@@ -240,8 +238,6 @@ void ScriptManager::addScript(Script *script)
     lua_pcall(lua, 2, 0, 0);
 
     m_scriptList.append(script);
-
-
 }
 
 void ScriptManager::delScriptFromItem(GameObjectItem *item)

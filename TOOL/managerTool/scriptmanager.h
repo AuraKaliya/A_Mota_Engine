@@ -8,6 +8,8 @@
 #include <TOOL/sourceTool/sourcesystem.h>
 #include <TOOL/instructionTool/instructionsystem.h>
 #include <QTimer>
+#include <QDir>
+#include <QApplication>
 
 /*
     1.每个item绑定的script都是一个lua虚拟机
