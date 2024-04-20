@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QMap>
 #include <TOOL/editTool/editsystem.h>
+#include <DATA/enginestyle.h>
 
 class ItemTreeWidget : public UIWidget
 {
@@ -17,6 +18,7 @@ public:
 
     void addScene(QString scene);
     void addItemToScene(QString scene,QString itemName);
+    void setUIStyle()override;
 public slots:
     void updateTree();
     void resetTree();

@@ -6,8 +6,7 @@
 class EngineStyle
 {
 public:
-    static EngineStyle* getInstance();
-
+    static EngineStyle* getInstance(QString styleName="Default");
 
     QFont thirdTitleFont() const;
 
@@ -23,8 +22,12 @@ public:
 
     QFont firstTextFont() const;
 
-private:
+    QString styleName() const;
 
+    void setStyleName(const QString &newStyleName);
+
+private:
+    QString m_styleName;
     QFont m_firstTitleFont;
     QFont m_secondTitleFont;
     QFont m_thirdTitleFont;
@@ -37,7 +40,7 @@ private:
     QString m_firstButtonStyle;
 
     static EngineStyle * m_instance;
-    EngineStyle();
+    EngineStyle(QString styleName="Default");
 };
 
 #endif // ENGINESTYLE_H

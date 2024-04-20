@@ -5,6 +5,7 @@
 #include<DATA/baseClass/uiwidget.h>
 #include <QTextEdit>
 #include <QTextCharFormat>
+#include <DATA/enginestyle.h>
 
 #pragma execution_character_set("utf-8")
 class HistoryWidget : public UIWidget

@@ -13,6 +13,7 @@ private:
     UIManager* m_uiManager=nullptr;
 public:
     static UISystem*getInstance(QObject *parent = nullptr);
+    UIManager* getManager();
     bool systemStart()override;
     bool systemInit() override;
     bool systemSolve() override;

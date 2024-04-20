@@ -68,17 +68,25 @@ void SourceManageWidget::setUIStyle()
         "QPushButton:hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.2); }"
         "QPushButton:!hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.6); }";
 
-
-
-
     setStyleSheet(style);
     qDebug()<<"check  SourceManageWidget  end";
 }
 
 void SourceManageWidget::paintEvent(QPaintEvent *e)
 {
+    UIWidget::paintEvent(e);
     QPainter painter(this);
-    QImage  img(":/RESOURCE/default/Background1.png");
-    painter.drawImage(this->rect(),img);
+
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        painter.fillRect(this->rect(),QBrush(Qt::darkGray));
+    }
+    else
+    {
+        QImage  img(":/RESOURCE/default/Background1.png");
+        painter.drawImage(this->rect(),img);
+    }
+
+    painter.end();
 
 }

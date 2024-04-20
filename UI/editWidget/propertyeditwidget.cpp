@@ -108,20 +108,35 @@ void PropertyEditWidget::setNowGameObjectItem(GameObjectItem *newNowGameObjectIt
 
 void PropertyEditWidget::paintEvent(QPaintEvent *e)
 {
-
+    UIWidget::paintEvent(e);
     QPainter painter(this);
-    QImage  img(":/RESOURCE/default/Background1.png");
 
-    painter.drawImage(this->rect(),img);
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        painter.fillRect(this->rect(),QBrush(Qt::darkGray));
+    }
+    else
+    {
+        QImage  img(":/RESOURCE/default/Background1.png");
+        painter.drawImage(this->rect(),img);
+    }
+
+    painter.end();
+
+
+
 }
 
 void PropertyEditWidget::setUIStyle()
 {
-    QString style=
-        "QLabel{}";
-
-    setStyleSheet(style);
-
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        setStyleSheet("background-color:grey");
+    }
+    else
+    {
+        setStyleSheet("background-color:white");
+    }
 }
 
 void PropertyEditWidget::setComponetWidgetVisible(bool flag)

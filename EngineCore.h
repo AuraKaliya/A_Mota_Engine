@@ -19,7 +19,7 @@
 #include "TOOL/managerTool/statemanger.h"
 
 #include <DATA/constvalue.h>
-
+#include <DATA/enginestyle.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -78,5 +78,6 @@ private slots:
     void on_insButton_clicked();
     //**test****//
     void on_pushButton_2_clicked();
+    void on_styleButton_clicked();
 };
 #endif // ENGINECORE_H

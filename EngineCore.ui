@@ -16,53 +16,66 @@
   <widget class="QPushButton" name="testBtn">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>1020</y>
+     <x>240</x>
+     <y>1030</y>
      <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>testToImport()</string>
+    <string>加载资源文件</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>990</x>
-     <y>1020</y>
+     <x>470</x>
+     <y>1030</y>
      <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>testToTick()</string>
+    <string>独立窗口</string>
    </property>
   </widget>
   <widget class="QPushButton" name="insButton">
    <property name="geometry">
     <rect>
-     <x>1210</x>
-     <y>1020</y>
+     <x>690</x>
+     <y>1030</y>
      <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>testToInstruction()</string>
+    <string>初始化样板</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>1020</y>
+     <x>10</x>
+     <y>1030</y>
      <width>201</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>PluginTest</string>
+    <string>加载插件</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="styleButton">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>1030</y>
+     <width>201</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>切换主题</string>
    </property>
   </widget>
  </widget>

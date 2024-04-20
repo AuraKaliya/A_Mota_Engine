@@ -3,6 +3,15 @@
 
 
 UIManager* UIManager::m_instance=nullptr;
+void UIManager::updateUIStyle()
+{
+
+     for(auto it:m_widgetList)
+    {
+        it->setUIStyle();
+    }
+}
+
 UIManager *UIManager::getInstance(QObject *parent)
 {
     if(m_instance==nullptr)
@@ -95,7 +104,7 @@ void UIManager::loadUI()
 
 
 
-
+        updateUIStyle();
 
         //统一设置--Editor
         for(auto it:m_widgetList)
@@ -111,6 +120,7 @@ void UIManager::loadUI()
                 it->setNowDemo(demo);
                 qDebug()<<"Now Set the demo"<<demo <<demo->objectName();
                 it->demoInit();
+
             }
             else
             {
@@ -123,10 +133,6 @@ void UIManager::loadUI()
             connect(it,SIGNAL(actionSend(QString)),     m_historyWidget,SLOT(addAction(QString))        );
             connect(it,SIGNAL(eventSend(QString)),      m_historyWidget,SLOT(addEvent(QString))         );
             connect(it,SIGNAL(instructionSend(QString)),m_historyWidget,SLOT(addInstruction(QString))   );
-
-
-
-
 
         }
     }

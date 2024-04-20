@@ -21,7 +21,14 @@ HistoryWidget::HistoryWidget(QWidget *parent)
 
 void HistoryWidget::setUIStyle()
 {
-    setStyleSheet("background-color:white");
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+       setStyleSheet("background-color:grey");
+    }
+    else
+    {
+      setStyleSheet("background-color:white");
+    }
 }
 
 void HistoryWidget::addAction(QString str)

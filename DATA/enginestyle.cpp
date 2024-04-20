@@ -2,11 +2,11 @@
 EngineStyle * EngineStyle::m_instance=nullptr;
 
 
-EngineStyle *EngineStyle::getInstance()
+EngineStyle *EngineStyle::getInstance(QString styleName)
 {
     if(m_instance==nullptr)
     {
-        m_instance = new EngineStyle();
+        m_instance = new EngineStyle(styleName);
     }
     return m_instance;
 }
@@ -46,44 +46,92 @@ QFont EngineStyle::firstTextFont() const
     return m_firstTextFont;
 }
 
-EngineStyle::EngineStyle()
+QString EngineStyle::styleName() const
 {
-    //QFont  字体样式
-    //第三标题
-    m_thirdTitleFont.setFamily("宋体");
-    m_thirdTitleFont.setPixelSize(15);
-    m_thirdTitleFont.setBold(true);
-    //m_thirdTitleFont.setLetterSpacing(QFont::PercentageSpacing,100);
-    //m_thirdTitleFont.setLetterSpacing(QFont::AbsoluteSpacing,1);
+    return m_styleName;
+}
 
-    // 第一文本
-    m_firstTextFont.setFamily("宋体");
-    m_firstTextFont.setPixelSize(15);
+void EngineStyle::setStyleName(const QString &newStyleName)
+{
+    m_styleName = newStyleName;
+}
 
-    //QString 下拉框样式
+EngineStyle::EngineStyle(QString styleName)
+{
+    //styleName="Night";
 
-    m_firstComboBoxStyle=
-    "QComboBox{color:rgb(10,10,10);font-size:14px;padding:1px 15px 1px 3px;border:1px solid rgba(225,225,225,1);border-radius:5px 5px 0px 0px;}"
-    "QComboBox::drop-down{subcontrol-origin: padding;subcontrol-position: top right; width: 15px; border:none;}"
-    "QComboBox::down-arrow{width:15px;background:transparent;padding:0px 0px 0px 0px;image:url(:/RESOURCE/default/arrow1.png);}"
-    "QComboBox::down-arrow:on{image:url(:/RESOURCE/default/arrow2.png);}"
-    ;
+    m_styleName=styleName;
+    if(styleName=="Night")
+    {
+        //QFont  字体样式
+        //第三标题
+        m_thirdTitleFont.setFamily("宋体");
+        m_thirdTitleFont.setPixelSize(15);
+        m_thirdTitleFont.setBold(true);
+
+        // 第一文本
+        m_firstTextFont.setFamily("宋体");
+        m_firstTextFont.setPixelSize(15);
+
+        //QString 下拉框样式
+        m_firstComboBoxStyle=
+            "QComboBox{color:rgb(10,10,10);font-size:14px;padding:1px 15px 1px 3px;border:1px solid rgba(190,190,190,1);border-radius:5px 5px 0px 0px;}"
+            "QComboBox::drop-down{subcontrol-origin: padding;subcontrol-position: top right; width: 15px; border:none;}"
+            "QComboBox::down-arrow{width:15px;background:transparent;padding:0px 0px 0px 0px;image:url(:/RESOURCE/default/arrow1.png);}"
+            "QComboBox::down-arrow:on{image:url(:/RESOURCE/default/arrow2.png);}"
+            ;
+        //QString 编辑框 label样式
+
+        m_editLabelStyle=
+            "QWidget{color: white;background-color:rgba(52,58,64,0.7);}"
+            "QLineEdit{border-width:0;border-style:outset;}"
+            ;
+        //QString   按钮样式
+        m_firstButtonStyle=
+            "QPushButton:hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.6); }"
+            "QPushButton:!hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.8); }"
+            ;
+    }
+    else
+    {
+        //QFont  字体样式
+        //第三标题
+        m_thirdTitleFont.setFamily("宋体");
+        m_thirdTitleFont.setPixelSize(15);
+        m_thirdTitleFont.setBold(true);
+        //m_thirdTitleFont.setLetterSpacing(QFont::PercentageSpacing,100);
+        //m_thirdTitleFont.setLetterSpacing(QFont::AbsoluteSpacing,1);
+
+        // 第一文本
+        m_firstTextFont.setFamily("宋体");
+        m_firstTextFont.setPixelSize(15);
+
+        //QString 下拉框样式
+
+        m_firstComboBoxStyle=
+            "QComboBox{color:rgb(10,10,10);font-size:14px;padding:1px 15px 1px 3px;border:1px solid rgba(225,225,225,1);border-radius:5px 5px 0px 0px;}"
+            "QComboBox::drop-down{subcontrol-origin: padding;subcontrol-position: top right; width: 15px; border:none;}"
+            "QComboBox::down-arrow{width:15px;background:transparent;padding:0px 0px 0px 0px;image:url(:/RESOURCE/default/arrow1.png);}"
+            "QComboBox::down-arrow:on{image:url(:/RESOURCE/default/arrow2.png);}"
+            ;
 
 
-    //QString 编辑框 label样式
+        //QString 编辑框 label样式
 
-    m_editLabelStyle=
-    "QWidget{color: white;background-color:rgba(52,58,64,0.4);}"
-    "QLineEdit{border-width:0;border-style:outset;}"
-    ;
+        m_editLabelStyle=
+            "QWidget{color: white;background-color:rgba(52,58,64,0.4);}"
+            "QLineEdit{border-width:0;border-style:outset;}"
+            ;
 
 
-    //QString   按钮样式
+        //QString   按钮样式
 
-    m_firstButtonStyle=
-        "QPushButton:hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.2); }"
-        "QPushButton:!hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.6); }"
-        ;
+        m_firstButtonStyle=
+            "QPushButton:hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.2); }"
+            "QPushButton:!hover { border-radius:10px;color: white;background-color:rgba(52,58,64,0.6); }"
+            ;
+    }
+
 
 
 }

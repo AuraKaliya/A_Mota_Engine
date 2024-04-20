@@ -383,3 +383,18 @@ void EngineCore::on_pushButton_2_clicked()
     qDebug()<<"==================load Plugin==============end";
 }
 
+
+void EngineCore::on_styleButton_clicked()
+{
+    if(EngineStyle::getInstance()->styleName()=="Default")
+    {
+        EngineStyle::getInstance()->setStyleName("Night");
+    }
+    else
+    {
+        EngineStyle::getInstance()->setStyleName("Default");
+    }
+
+    m_uiSystem->getInstance()->getManager()->updateUIStyle();
+}
+

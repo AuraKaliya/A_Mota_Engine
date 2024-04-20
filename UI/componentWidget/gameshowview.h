@@ -18,6 +18,9 @@
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+
+#include <DATA/enginestyle.h>
+
 class GameShowView : public QGraphicsView
 {
     Q_OBJECT

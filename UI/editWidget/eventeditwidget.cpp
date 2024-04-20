@@ -68,9 +68,17 @@ ToolWidget *EventEditWidget::getShowWidget() const
 
 void EventEditWidget::setUIStyle()
 {
-    QString style=
-        //EngineStyle::getInstance()->firstButtonStyle()+
-                    "EventShowWidget{border-radius:10px;background-color:rgba(248,249,250,0.2);}";
+    QString style;
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        style=
+            "EventShowWidget{border-radius:10px;background-color:rgba(157,162,160,0.5);}";
+    }
+    else
+    {
+        style=
+            "EventShowWidget{border-radius:10px;background-color:rgba(248,249,250,0.2);}";
+    }
 
     setStyleSheet(style);
 }
@@ -80,4 +88,20 @@ void EventEditWidget::paintEvent(QPaintEvent *e)
 //    QPainter painter(this);
 //    painter.setBrush(QBrush(Qt::red));
 //    painter.drawRect(this->rect());
+
+    UIWidget::paintEvent(e);
+    QPainter painter(this);
+
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        painter.fillRect(this->rect(),QBrush(Qt::darkGray));
+    }
+    else
+    {
+        QImage  img(":/RESOURCE/default/Background1.png");
+        painter.drawImage(this->rect(),img);
+    }
+
+    painter.end();
+
 }

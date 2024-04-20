@@ -9,6 +9,11 @@ UISystem *UISystem::getInstance(QObject *parent)
     return  m_instance;
 }
 
+UIManager *UISystem::getManager()
+{
+    return m_uiManager;
+}
+
 bool UISystem::systemStart()
 {
     return true;

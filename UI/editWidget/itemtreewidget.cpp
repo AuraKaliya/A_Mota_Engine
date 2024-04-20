@@ -80,6 +80,19 @@ void ItemTreeWidget::addItemToScene(QString scene, QString itemName)
 
 }
 
+void ItemTreeWidget::setUIStyle()
+{
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        setStyleSheet("background-color:grey");
+    }
+    else
+    {
+        setStyleSheet("background-color:white");
+    }
+
+}
+
 void ItemTreeWidget::updateTree()
 {
     resetTree();

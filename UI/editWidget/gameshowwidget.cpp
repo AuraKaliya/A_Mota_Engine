@@ -36,6 +36,8 @@ GameShowWidget::GameShowWidget(QWidget *parent)
     connect(EditSystem::getInstance()->getManager(),&EditManager::nowSceneChanged,this,[this](int i){
        init();
     });
+
+    setUIStyle();
 }
 
 void GameShowWidget::init()
@@ -142,6 +144,15 @@ void GameShowWidget::dropWidgetHide()
 void GameShowWidget::setUIStyle()
 {
 
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        m_gameShowView->setBackgroundBrush(QBrush(Qt::darkGray));
+    }
+    else
+    {
+        m_gameShowView->setBackgroundBrush(QBrush(Qt::white));
+    }
+
 }
 
 void GameShowWidget::mouseMoveEvent(QMouseEvent *e)
@@ -172,42 +183,54 @@ void GameShowWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void GameShowWidget::paintEvent(QPaintEvent *e)
 {
-    qDebug()<<"GameShowWidget::paintEvent";
-    QPainter painter(this);
-    if(!m_gameShowView->scene()->selectedItems().empty())
-    {
-        QRect rect;
-        //绘制item选中
-        rect.setRect(m_gameShowView->mapFromScene(m_gameShowView->scene()->selectedItems()[0]->pos()).x()-(m_gameShowView->width()-m_gameShowView->scene()->width())/2,
-                     m_gameShowView->mapFromScene(m_gameShowView->scene()->selectedItems()[0]->pos()).y()-(m_gameShowView->height()-m_gameShowView->scene()->height())/2,
-                     0,0);
+//    qDebug()<<"GameShowWidget::paintEvent";
+//    QPainter painter(this);
+//    if(!m_gameShowView->scene()->selectedItems().empty())
+//    {
+//        QRect rect;
+//        //绘制item选中
+//        rect.setRect(m_gameShowView->mapFromScene(m_gameShowView->scene()->selectedItems()[0]->pos()).x()-(m_gameShowView->width()-m_gameShowView->scene()->width())/2,
+//                     m_gameShowView->mapFromScene(m_gameShowView->scene()->selectedItems()[0]->pos()).y()-(m_gameShowView->height()-m_gameShowView->scene()->height())/2,
+//                     0,0);
 
-        for(auto it:m_gameShowView->scene()->selectedItems())
-        {
-            //rect.setY(qMin((int)rect.y(),(int)m_gameShowView->mapFromScene(it->pos()).y()));
-            rect.setX(qMin((int)rect.x(),(int)(m_gameShowView->mapFromScene(it->pos()).x()-(m_gameShowView->width()-m_gameShowView->scene()->width())/2)));
-            //rect.setY(qMin((int)rect.y(),(int)m_gameShowView->mapFromScene(it->pos()).y()));
-            rect.setY(qMin((int)rect.y(),(int)(m_gameShowView->mapFromScene(it->pos()).y()-(m_gameShowView->height()-m_gameShowView->scene()->height())/2)));
-            rect.setWidth(qMax((int)rect.width(),(int)(it->x()+it->boundingRect().width()-rect.x())));
-            rect.setHeight(qMax((int)rect.height(),(int)(it->y()+it->boundingRect().height()-rect.y())));
-        }
-        qDebug()<<"GameShowWidget::rect:"   <<rect;
+//        for(auto it:m_gameShowView->scene()->selectedItems())
+//        {
+//            //rect.setY(qMin((int)rect.y(),(int)m_gameShowView->mapFromScene(it->pos()).y()));
+//            rect.setX(qMin((int)rect.x(),(int)(m_gameShowView->mapFromScene(it->pos()).x()-(m_gameShowView->width()-m_gameShowView->scene()->width())/2)));
+//            //rect.setY(qMin((int)rect.y(),(int)m_gameShowView->mapFromScene(it->pos()).y()));
+//            rect.setY(qMin((int)rect.y(),(int)(m_gameShowView->mapFromScene(it->pos()).y()-(m_gameShowView->height()-m_gameShowView->scene()->height())/2)));
+//            rect.setWidth(qMax((int)rect.width(),(int)(it->x()+it->boundingRect().width()-rect.x())));
+//            rect.setHeight(qMax((int)rect.height(),(int)(it->y()+it->boundingRect().height()-rect.y())));
+//        }
+//        qDebug()<<"GameShowWidget::rect:"   <<rect;
 
-        QRect drawRect(rect.x()+(m_gameShowView->width()-m_gameShowView->scene()->width())/2,
-                       rect.y()+(m_gameShowView->height()-m_gameShowView->scene()->height())/2,
-                       rect.width(),
-                       rect.height()
-                       );
-//        rect.setX(rect.x()+(m_gameShowView->width()-m_gameShowView->scene()->width())/2);
-//        rect.setY(rect.y()+(m_gameShowView->height()-m_gameShowView->scene()->height())/2);
-        qDebug()<<"GameShowWidget::rect2 :" <<drawRect;
-        QPen pen(Qt::red,3,Qt::DashDotDotLine,Qt::RoundCap,Qt::RoundJoin);
-        painter.setPen(pen);
-        painter.drawRect(rect);
-    }
-//    painter.setPen(QPen(Qt::red));
-//    painter.drawRect(0,750,100,49);
-    painter.end();
-    UIWidget::paintEvent(e);
+//        QRect drawRect(rect.x()+(m_gameShowView->width()-m_gameShowView->scene()->width())/2,
+//                       rect.y()+(m_gameShowView->height()-m_gameShowView->scene()->height())/2,
+//                       rect.width(),
+//                       rect.height()
+//                       );
+////        rect.setX(rect.x()+(m_gameShowView->width()-m_gameShowView->scene()->width())/2);
+////        rect.setY(rect.y()+(m_gameShowView->height()-m_gameShowView->scene()->height())/2);
+//        qDebug()<<"GameShowWidget::rect2 :" <<drawRect;
+//        QPen pen(Qt::red,3,Qt::DashDotDotLine,Qt::RoundCap,Qt::RoundJoin);
+//        painter.setPen(pen);
+//        painter.drawRect(rect);
+//    }
+////    painter.setPen(QPen(Qt::red));
+////    painter.drawRect(0,750,100,49);
+//    painter.end();
+   UIWidget::paintEvent(e);
+
+//    QPainter painterBackground(this);
+
+//    if(EngineStyle::getInstance()->styleName()=="Night")
+//    {
+//        painterBackground.fillRect(this->rect(), Qt::darkGray); // 深灰色背景
+//    }
+//    else
+//    {
+//        painterBackground.fillRect(this->rect(), Qt::white);// 纯白色背景
+//    }
+//    painterBackground.end();
 }
 

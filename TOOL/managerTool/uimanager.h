@@ -22,6 +22,7 @@ class UIManager : public QObject
 
 public:
 
+    void updateUIStyle();
 private:
     static UIManager* m_instance;
     EngineState m_engineState=EngineState::Editor;

@@ -5,6 +5,9 @@
 GameShowView::GameShowView(QWidget *parent)
     : QGraphicsView(parent)
 {
+
+
+
     //setFixedSize(1050,750);
     //setBackgroundBrush(Qt::white);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -38,8 +41,8 @@ void GameShowView::mouseMoveEvent(QMouseEvent *e)
         }
         m_selectRect=rect;
     }
-   QGraphicsView::mouseMoveEvent(e);
-   viewport()->update();
+    QGraphicsView::mouseMoveEvent(e);
+    viewport()->update();
 }
 
 void GameShowView::mouseReleaseEvent(QMouseEvent *e)
@@ -77,25 +80,31 @@ void GameShowView::mouseReleaseEvent(QMouseEvent *e)
 
     }
 
-   viewport()->update();
+    viewport()->update();
 }
 
 void GameShowView::paintEvent(QPaintEvent *e)
 {
+    QPainter painterBackground(this->viewport());
+
+    if(EngineStyle::getInstance()->styleName()=="Night")
+    {
+        painterBackground.fillRect(this->rect(), Qt::darkGray); // 深灰色背景
+    }
+    else
+    {
+        painterBackground.fillRect(this->rect(), Qt::white);// 纯白色背景
+    }
+    painterBackground.end();
+
     QGraphicsView::paintEvent(e);
-    QPainter painters(this->viewport());
+    QPainter painterSelect(this->viewport());
+    //painterSelect.begin(this->viewport());
     if(!this->scene()->selectedItems().empty())
     {
         QPen pen(Qt::red,2,Qt::DashDotDotLine,Qt::RoundCap,Qt::RoundJoin);
-        painters.setPen(pen);
-        painters.drawRect(m_selectRect);
+        painterSelect.setPen(pen);
+        painterSelect.drawRect(m_selectRect);
     }
-
-
-
-
-
-
-
-
+    painterSelect.end();
 }
