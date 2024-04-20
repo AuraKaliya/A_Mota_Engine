@@ -261,7 +261,10 @@ void EditManager::initFromDemo()
                                 //添加脚本   --新修正： script应该与item绑定
                                 if(obj->getScript()!="")
                                 {
-                                    ScriptSystem::getInstance()->getManager()->addScript(item,"./"+obj->getScript());
+                                    QDir dir(QApplication::applicationDirPath()+"/scripts");
+                                    QString fileName=dir.path()+"/"+obj->getScript();
+                                    //ScriptSystem::getInstance()->getManager()->addScript(item,"./"+obj->getScript());
+                                    ScriptSystem::getInstance()->getManager()->addScript(item,fileName);
                                     item->setScriptBindState(true);
                                 }
 
@@ -328,7 +331,10 @@ void EditManager::initFromDemo()
                                     //添加脚本   --新修正： script应该与item绑定   --这是统一的处理，用于在外部代码中进行控制obj的特性（如 检测敌意范围等）
                                     if(obj->getScript()!="")
                                     {
-                                        ScriptSystem::getInstance()->getManager()->addScript(item,"./"+obj->getScript());
+                                        QDir dir(QApplication::applicationDirPath()+"/scripts");
+                                        QString fileName=dir.path()+"/"+obj->getScript();
+                                        //ScriptSystem::getInstance()->getManager()->addScript(item,"./"+obj->getScript());
+                                        ScriptSystem::getInstance()->getManager()->addScript(item,fileName);
                                         item->setScriptBindState(true);
                                     }
 

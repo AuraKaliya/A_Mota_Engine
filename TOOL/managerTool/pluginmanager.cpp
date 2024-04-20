@@ -24,6 +24,7 @@ void PluginManager::initPluginList()
 
 void PluginManager::loadPlugins()
 {
+
     for(auto it:m_pluginFiles)
     {
         QPluginLoader loader;
@@ -75,6 +76,11 @@ PluginManager::PluginManager(QObject *parent)
     //==========test==========
     qDebug()<<"checkPlugin:"<<m_pluginDir->path();
     //
+}
+
+QStringList PluginManager::pluginFiles() const
+{
+    return m_pluginFiles;
 }
 
 QVector<QWidget *> PluginManager::pluginWidgetList() const

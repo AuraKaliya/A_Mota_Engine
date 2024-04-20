@@ -20,6 +20,8 @@ public:
     void setRootWidget(UIWidget* rootWidget);
     QVector<QWidget *> pluginWidgetList() const;
 
+    QStringList pluginFiles() const;
+
 private:
     static PluginManager* m_instance;
     explicit PluginManager(QObject *parent = nullptr);

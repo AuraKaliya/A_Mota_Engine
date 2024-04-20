@@ -191,6 +191,33 @@ void EngineCore::keyPressEvent(QKeyEvent *e)
     char keyChar=e->key();
     emit actionSend(QString(keyChar)+" Pressed.");
     //qDebug()<<Qt::Key_Up;
+    //if(e->key()==)
+
+    //================================test=================================
+    if(e->key() == Qt::Key_P && (e->modifiers() & Qt::ControlModifier))
+    {
+        emit actionSend(QString("init Source."));
+        on_testBtn_clicked();
+    }
+
+    if(e->key() == Qt::Key_O && (e->modifiers() & Qt::ControlModifier))
+    {
+        emit actionSend(QString("init Demo."));
+        on_insButton_clicked();
+    }
+
+    if(e->key() == Qt::Key_I && (e->modifiers() & Qt::ControlModifier))
+    {
+        emit actionSend(QString("load plugin."));
+        on_pushButton_2_clicked();
+    }
+
+    if(e->key() == Qt::Key_U && (e->modifiers() & Qt::ControlModifier))
+    {
+       emit actionSend(QString("switch style."));
+       on_styleButton_clicked();
+    }
+    //================================test=================================
     GlobalKeyValue keyValue;
     //目前支持定义0-9：48~57  a-z:65~90
     if(e->key()>=65&&e->key()<=90)

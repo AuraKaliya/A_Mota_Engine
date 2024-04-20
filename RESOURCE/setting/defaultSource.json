@@ -1,7 +1,7 @@
 {	
     "Type":"Source",
     "Data":{
-        "PixSource":{   "PixPath":"D:/QTF/A_Mota_Engine/RESOURCE/default/MotaPix",
+        "PixSource":{   "PixPath":"./default/MotaPix",
             "PixList":[
                 {
                     "PixIdx":1100001,

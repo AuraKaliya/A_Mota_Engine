@@ -95,8 +95,8 @@ void GameObjectItemScriptWidget::initNoScriptWidget()
         }
 
         qDebug()<<"final:"<<finalFilePath;
-        ScriptSystem::getInstance()->getManager()->addScript(m_linkItem,"./"+finalFilePath);
-
+        //ScriptSystem::getInstance()->getManager()->addScript(m_linkItem,"./"+finalFilePath);
+        ScriptSystem::getInstance()->getManager()->addScript(m_linkItem,path);
         m_linkItem->setScriptBindState(true);
 
         //需要添加对GO的处理

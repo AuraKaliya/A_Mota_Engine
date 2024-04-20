@@ -201,6 +201,7 @@ ScriptManager *ScriptManager::getInstance(QObject *parent)
 
 void ScriptManager::addScript(GameObjectItem *item, QString fileName)
 {
+    qDebug()<<"addScript:  file name :"<<fileName;
     Script *script=new Script(fileName,item->getLinkObj(),item);
     addScript(script);
 
@@ -222,12 +223,17 @@ void ScriptManager::addScript(Script *script)
     lua_State* lua=luaL_newstate();
     script->m_lua=lua;
     luaL_openlibs(lua);
-    //qDebug()<<"filename: "<<script->m_fileName.toStdString().c_str();
-    luaL_dofile(lua,script->m_fileName.toStdString().c_str());
 
+    qDebug()<<"filename c: "<<script->m_fileName.toStdString().c_str();
+
+    int res=luaL_dofile(lua,script->m_fileName.toStdString().c_str());
+    if(res!=0)
+    {
+        qDebug()<<"error in lua:"<<lua_tostring(lua, -1);
+    }
     //qDebug()<<"addScript!";
     lua_getglobal(lua,"testname");
-    //qDebug()<<"testName: "<<lua_tostring(lua,-1);
+    qDebug()<<"testName: "<<lua_tostring(lua,-1);
 
     //注册函数
     registerFunc(lua);

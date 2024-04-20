@@ -79,6 +79,7 @@ void UIManager::loadUI()
         //setFixedSize(400,400);
         m_itemTreeUI->move(1510,10);
 
+
         connect(m_rootWidget,SIGNAL(actionSend(QString)),m_historyWidget,SLOT(addAction(QString)));
 
         connect(InstructionSystem::getInstance()->getManager(),SIGNAL(instructionSend(QString)),m_historyWidget,SLOT(addInstruction(QString)));
@@ -92,6 +93,11 @@ void UIManager::loadUI()
 
 
         connect(PluginSystem::getInstance()->getManager(),&PluginManager::pluginLoadFinished,this,[this](){
+            QStringList pluginsList=PluginSystem::getInstance()->getManager()->pluginFiles();
+            for(auto it:pluginsList)
+            {
+                static_cast<HistoryWidget*>(m_historyWidget)->addAction(it);
+            }
             for(auto it:PluginSystem::getInstance()->getManager()->pluginWidgetList())
             {
                 UIWidget* w=static_cast<UIWidget*>(it);
