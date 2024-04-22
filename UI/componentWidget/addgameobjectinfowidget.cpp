@@ -86,6 +86,7 @@ void AddGameObjectInfoWidget::initPixLabel()
         else
         {
             m_linkObject->setPixIdList(QString::number(id));
+            m_linkObject->setPixSourceFlag(true);
             m_propertyWidget->setNewValueToProperty("pixIdList",QString::number(id));
         }
 
