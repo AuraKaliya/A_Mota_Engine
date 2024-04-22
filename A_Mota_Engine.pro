@@ -70,6 +70,8 @@ SOURCES += \
     UI/componentWidget/addgameobjectinfowidget.cpp \
     UI/componentWidget/addsourceinfowidget.cpp \
     UI/componentWidget/addsourcewidget.cpp \
+    UI/componentWidget/cardhubwidget.cpp \
+    UI/componentWidget/cardlabel.cpp \
     UI/componentWidget/diybutton.cpp \
     UI/componentWidget/eventshowwidget.cpp \
     UI/componentWidget/gameobjectdropwidget.cpp \
@@ -165,6 +167,8 @@ HEADERS += \
     UI/componentWidget/addgameobjectinfowidget.h \
     UI/componentWidget/addsourceinfowidget.h \
     UI/componentWidget/addsourcewidget.h \
+    UI/componentWidget/cardhubwidget.h \
+    UI/componentWidget/cardlabel.h \
     UI/componentWidget/diybutton.h \
     UI/componentWidget/eventshowwidget.h \
     UI/componentWidget/gameobjectdropwidget.h \

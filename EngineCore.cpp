@@ -289,7 +289,7 @@ void EngineCore::on_testBtn_clicked()
     QString path="D:/QTF/A_Mota_Engine/RESOURCE/demoSetting/MotaTest1.json";
     //m_sourceSystem->getManager()->importSource(path);
 
-    path="D:/QTF/A_Mota_Engine/RESOURCE/setting/defaultSource.json";
+    path="./setting/defaultSource.json";
     m_sourceSystem->getManager()->importSource(path);
     qDebug()<<"on_testBtn_clicked"<<m_sourceSystem->getManager()->getPixmapList();
 #if 0

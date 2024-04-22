@@ -33,7 +33,7 @@ private:
     QVector<StateLabel*> m_optionLabelList{};
 
     QVector<PropertyLabelWidget*> m_propertyList{};
-
+    QMap<QString,PropertyLabelWidget*> m_propertyDictionary{};
     int m_nowShowWidgetIndex=0;
     bool m_hotUpdate=false;
 public:
@@ -44,6 +44,7 @@ public:
     void initComponentInfoWidget();
     void initWidget();
     void initProperty();
+    void setNewValueToProperty(QString name,QString value);
     QVector<PropertyLabelWidget*>* getPropertyList();
     void showWidgetSwitch(StateLabel* label);
     void setHotUpdate(bool flag);

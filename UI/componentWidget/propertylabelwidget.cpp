@@ -67,6 +67,11 @@ void PropertyLabelWidget::setPair(QString title, QString value)
 
 }
 
+void PropertyLabelWidget::setValue(QString value)
+{
+    m_valueLabel->setText(value);
+}
+
 void PropertyLabelWidget::initWidget()
 {
     m_titleLabel->setAlignment(Qt::AlignCenter);

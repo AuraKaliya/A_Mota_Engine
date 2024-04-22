@@ -14,11 +14,12 @@
 
 #include <UI/componentWidget/gameobjectpropertiesshowwidget.h>
 #include <UI/componentWidget/sourcetreewidget.h>
+#include "UI/componentWidget/cardhubwidget.h"
 #include <DATA/baseClass/uiwidget.h>
 
 #include <DATA/baseClass/gameobject.h>
 #include <TOOL/sourceTool/sourcesystem.h>
-
+#include <DATA/baseClass/clicklabel.h>
 
 /*
  * 添加新GameObject时弹出的信息预编辑界面
@@ -32,7 +33,8 @@ class AddGameObjectInfoWidget : public UIWidget
     Q_OBJECT
 
 private:
-    QLabel* m_pixLabel=nullptr;
+    CardLabel* m_pixLabel=nullptr;
+
 
     QWidget* m_nodesWidget=nullptr;
     QLabel* m_firstNodeLabel=nullptr;
@@ -54,6 +56,7 @@ private:
     QVector<QLabel*> m_linkLabelList;
     QVector<GameObject*> m_linkObjectList;
     SourceTreeWidget* m_linkSourceTreeWidget=nullptr;
+    CardHubWidget* m_cardHubWidget=nullptr;
 
 public:
     explicit AddGameObjectInfoWidget(QWidget *parent = nullptr);

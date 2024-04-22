@@ -305,7 +305,6 @@ void SourceManager::registerGameObjectSource(GameObject *obj, QString objName)
     {
         if(getInstance()->getGameObjectSourceByName(objName)==nullptr)
         {
-
             m_gameObjectSourceDictionary[objName]=obj;
         }
         else
@@ -316,13 +315,14 @@ void SourceManager::registerGameObjectSource(GameObject *obj, QString objName)
     {
         qDebug()<<"ERROR:object name is null";
     }
-    qDebug()<<"***************";
-    for(auto it:m_gameObjectSourceDictionary)
-    {
-        qDebug()<<it;
-    }
-    qDebug()<<m_gameObjectSourceDictionary;
-    qDebug()<<"***************";
+
+//    qDebug()<<"***************";
+//    for(auto it:m_gameObjectSourceDictionary)
+//    {
+//        qDebug()<<it;
+//    }
+//    qDebug()<<m_gameObjectSourceDictionary;
+//    qDebug()<<"***************";
 
 }
 

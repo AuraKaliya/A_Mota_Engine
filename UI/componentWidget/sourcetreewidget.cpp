@@ -217,8 +217,7 @@ void SourceTreeWidget::initSource()
         //card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOById(it->getId()));
         card->initCard(SourceSystem::getInstance()->getManager()->getSourceMetaDataFromGOSourceByName(it->getName()));
 
-
-         card->setVisible(true);
+        card->setVisible(true);
         m_viewsList[1][0]->addCardWidget(card);
     }
 

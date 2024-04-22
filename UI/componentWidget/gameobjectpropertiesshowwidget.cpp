@@ -48,6 +48,7 @@ void GameObjectPropertiesShowWidget::initShowArea()
     m_showWidgetList.clear();
     m_propertyList.clear();
     m_optionLabelList.clear();
+    m_propertyDictionary.clear();
 
     m_showRect.setRect(0,0,this->width(),this->height()*0.8);
 
@@ -89,6 +90,7 @@ void GameObjectPropertiesShowWidget::initBaseInfoWidget()
         PropertyLabelWidget* w=new PropertyLabelWidget(m_baseInfoWidget);
         w->resize(400,50);
         w->setLink(m_linkObject,&(*list)[i]);
+        m_propertyDictionary.insert((*list)[i].name(),w);
         w->setRatio(4,6,5,0);
         w->initWidget();
         w->setVisible(true);
@@ -212,6 +214,19 @@ void GameObjectPropertiesShowWidget::initProperty()
         return ;
     }
 
+}
+
+void GameObjectPropertiesShowWidget::setNewValueToProperty(QString name, QString value)
+{
+    auto itor=m_propertyDictionary.find(name);
+    if(itor==m_propertyDictionary.end())
+    {
+        qDebug()<<"GameObjectPropertiesShowWidget::setNewValueToProperty  no have this prorperty";
+        qDebug()<<m_propertyDictionary;
+        return;
+    }
+
+    itor.value()->setValue(value);
 }
 
 QVector<PropertyLabelWidget *>* GameObjectPropertiesShowWidget::getPropertyList()

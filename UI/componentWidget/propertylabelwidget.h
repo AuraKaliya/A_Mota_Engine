@@ -27,6 +27,7 @@ public:
     void submitValue();
     void setLink(QObject* obj,QMetaProperty* property);
     void setPair(QString title,QString value);
+    void setValue(QString value);
     void initWidget();
     void setHotUpdate(bool flag);
     void setUIStyle()override;

@@ -1,5 +1,6 @@
 #include "addgameobjectinfowidget.h"
 
+
 GameObject *AddGameObjectInfoWidget::getLinkObject() const
 {
     return m_linkObject;
@@ -47,8 +48,6 @@ AddGameObjectInfoWidget::AddGameObjectInfoWidget(QWidget *parent)
 {
     resize(400,800);
     setWindowTitle("AddGameObject");
-
-
     initPixLabel();
     initNodesWidget();
     initPropertyWidget();
@@ -66,11 +65,42 @@ AddGameObjectInfoWidget::AddGameObjectInfoWidget(GameObject *obj, QWidget *paren
 
 void AddGameObjectInfoWidget::initPixLabel()
 {
-    m_pixLabel = new QLabel(this); // 创建一个QLabel对象，将其父对象设为当前类的对象
+    m_pixLabel = new CardLabel(this); // 创建一个QLabel对象，将其父对象设为当前类的对象
         // 设置m_pixLabel的其他属性，如文本、字体、对齐方式等
     m_pixLabel->setFixedSize(90,160);
-
     m_pixLabel->setPixmap(QPixmap(":/RESOURCE/default/GameObjectDefaultPix.png").scaled(m_pixLabel->width(),m_pixLabel->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+
+    m_cardHubWidget=new CardHubWidget();
+    //m_cardHubWidget->move(,this->y());
+
+    m_cardHubWidget->hideByPix();
+
+
+    connect(m_cardHubWidget,&CardHubWidget::cardSelectById,this,[this](int id){
+
+        m_pixLabel->setPixmap(QPixmap(*SourceSystem::getInstance()->getManager()->getPixSourceById(id)->pix()).scaled(m_pixLabel->width(),m_pixLabel->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        if (m_linkObject == nullptr)
+        {
+            qDebug()<<"CardHubWidget::cardSelectById  :: error no have link object.";
+        }
+        else
+        {
+            m_linkObject->setPixIdList(QString::number(id));
+            m_propertyWidget->setNewValueToProperty("pixIdList",QString::number(id));
+        }
+
+    });
+
+    connect(m_pixLabel,&ClickLabel::clicked,this,[this](){
+        //qDebug()<<"m_pixLabel &ClickLabel::clicked ---showByPix";
+        //qDebug()<<"check card hub widget:"<<m_cardHubWidget->getInitFlag();
+        if(!m_cardHubWidget->getInitFlag())
+        {
+            //qDebug()<<"CardHubWidget : need init";
+            m_cardHubWidget->initWidget();
+        }
+        m_cardHubWidget->showByPix();
+    });
 
 }
 
@@ -190,11 +220,12 @@ void AddGameObjectInfoWidget::initControBtn()
         {
             it->submitValue();
         }
-        qDebug()<<"this!";
+        //qDebug()<<"this!";
         //emit addObject(m_linkObject);
         //SourceSystem::getInstance()->getManager()->addGameObjectFromSample(m_linkObject->getClassName());
         SourceSystem::getInstance()->getManager()->addGameObjectSourceFromSample(m_linkObject->getClassName());
-        qDebug()<<"this!2";
+
+        //qDebug()<<"this!2";
         this->close();
     });
 }
@@ -223,10 +254,10 @@ void AddGameObjectInfoWidget::initSecondNodeLabelList()
 
 void AddGameObjectInfoWidget::initGameObjectClassBoxList()
 {
-    qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() start";
+    //qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() start";
     QVector<QPair<QString,GameObject*>> list=SourceSystem::getInstance()->getManager()->getGameObjectSampleList();
 
-    qDebug()<<list;
+    //qDebug()<<list;
 
     //m_GameObjectClassBox在clear时会变动currentIndex
     m_linkObjectList.clear();
@@ -244,5 +275,5 @@ void AddGameObjectInfoWidget::initGameObjectClassBoxList()
     {
         m_GameObjectClassBox->setCurrentIndex(0);
     }
-    qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() end";
+    //qDebug()<<" AddGameObjectInfoWidget::initGameObjectClassBoxList() end";
 }
